@@ -1,6 +1,5 @@
 # DHt11JavaMonitor
 Read arduino Serial Data and display it in a Java Swing GUI
-Software Name as Headline
 ======
 **unoTemp** Reads Arduino Serial Data, and displays it in a Java swing GUI.
 
