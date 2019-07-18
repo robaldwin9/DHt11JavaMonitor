@@ -61,7 +61,7 @@ public class SerialTemperatureComms
 				   char serialInput = (char)newData[i];
 				   
 				   //Character is a number or comma
-				   if((int)serialInput > 48 && (int)serialInput <58 || (int)serialInput == 44)
+				   if((int)serialInput >= 48 && (int)serialInput <58 || (int)serialInput == 44)
 				   {
 					   //Add string to buffer data
 					   data += serialInput;
