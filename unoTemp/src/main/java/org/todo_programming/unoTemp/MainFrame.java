@@ -25,9 +25,9 @@ public class MainFrame extends JFrame implements PropertyChangeListener
 	/** ID for class*/
 	private static final long serialVersionUID = 6244897348903266447L;
 	
-	TempBean tempBean;					//Data associated with the view
-	ScalableLabel lblTemp;				//Label for temperature
-	ScalableLabel lblHumidity;			//Label for humidity
+	private TempBean tempBean;					//Data associated with the view
+	private ScalableLabel lblTemp;				//Label for temperature
+	private ScalableLabel lblHumidity;			//Label for humidity
 	
 	/**
 	 * 
