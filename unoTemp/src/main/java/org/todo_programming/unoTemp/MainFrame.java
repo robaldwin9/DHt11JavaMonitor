@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -19,7 +21,7 @@ import org.todo_programming.scaleable.ScalableLabel;
  * @author robal
  *
  */
-public class MainFrame extends JFrame implements PropertyChangeListener
+public class MainFrame extends JFrame implements PropertyChangeListener, KeyListener
 {
 
 	/** ID for class*/
@@ -38,6 +40,8 @@ public class MainFrame extends JFrame implements PropertyChangeListener
 	{
 		tempBean = data;
 		data.addPropertyChangeListener(this);
+		
+		
 		
 		/** Label initialization*/
 		lblTemp = new ScalableLabel("0F",0.20f);
@@ -69,9 +73,11 @@ public class MainFrame extends JFrame implements PropertyChangeListener
 		constraints.insets = new Insets(1,1,1,1);
 		add(lblHumidity,constraints);
 		
-		getRootPane().setBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, Color.GREEN));
+		getRootPane().setBorder(BorderFactory.createMatteBorder(7, 7, 7, 7, Color.BLUE));
+		getContentPane().setBackground(new Color(86,250, 187));
 		setIconImage(new ImageIcon(getClass().getClassLoader().getResource("img/therm.png")).getImage());
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		addKeyListener(this);
 		setTitle("Temperature " + commPort);
 		setVisible(true);
 	}
@@ -92,17 +98,20 @@ public class MainFrame extends JFrame implements PropertyChangeListener
 							lblTemp.setText(tempBean.getTemp());
 							if(tempBean.getTempInteger() >= 80)
 							{
-								getRootPane().setBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, Color.RED));
+								getRootPane().setBorder(BorderFactory.createMatteBorder(7, 7, 7, 7, Color.RED));
+								getContentPane().setBackground(new Color(250,111, 86));
 							}
 							
 							else if(tempBean.getTempInteger() >=65)
 							{
-								getRootPane().setBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, Color.GREEN));
+								getRootPane().setBorder(BorderFactory.createMatteBorder(7, 7, 7, 7, new Color(255,99,8)));
+								getContentPane().setBackground(new Color(250,193, 86));
 							}
 							
 							else if(tempBean.getTempInteger() < 65)
 							{
-								getRootPane().setBorder(BorderFactory.createMatteBorder(4, 4, 4, 4, Color.BLUE));
+								getRootPane().setBorder(BorderFactory.createMatteBorder(7, 7, 7, 7, Color.BLUE));
+								getContentPane().setBackground(new Color(86,250, 187));
 							}
 							
 						}
@@ -117,14 +126,56 @@ public class MainFrame extends JFrame implements PropertyChangeListener
 			javax.swing.SwingUtilities.invokeLater(new Runnable()
 			{
 
-				public void run() {
+				public void run() 
+				{
 					lblHumidity.setText(tempBean.getHumidity());
-					
 				}
 		
 			});
 		}
 		
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) 
+	{
+		if(e.getKeyCode() == KeyEvent.VK_F12 )
+		{
+			if(isAlwaysOnTop())
+			{
+				setAlwaysOnTop(false);
+			}
+			
+			else
+			{
+				setAlwaysOnTop(true);
+				System.out.println("Always on top set: true");
+			}
+		}
+		
+		else if(e.getKeyCode() == KeyEvent.VK_F11)
+		{
+			if(getExtendedState() == JFrame.MAXIMIZED_BOTH)
+			{
+				setExtendedState(JFrame.NORMAL);
+			}
+			
+			else
+			{
+				setExtendedState(JFrame.MAXIMIZED_BOTH);
+			}
+		}
+	}
+	
+
+	@Override
+	public void keyTyped(KeyEvent e) 
+	{	
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) 
+	{
 	}
 
 }
