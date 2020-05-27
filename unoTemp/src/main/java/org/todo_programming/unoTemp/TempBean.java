@@ -34,7 +34,7 @@ public class TempBean implements Serializable
 	}
 	/**
 	 * 
-	 * @return
+	 * @return temperature string
 	 */
 	public String getTemp() 
 	{
@@ -48,7 +48,7 @@ public class TempBean implements Serializable
 	
 	/**
 	 * 
-	 * @param temp
+	 * @param temp temperature String
 	 */
 	public void setTemp(String temp) 
 	{
@@ -59,7 +59,7 @@ public class TempBean implements Serializable
 	
 	/**
 	 * 
-	 * @return
+	 * @return Humidity String
 	 */
 	public String getHumidity() 
 	{
@@ -68,7 +68,7 @@ public class TempBean implements Serializable
 	
 	/**
 	 * 
-	 * @return
+	 * @return - Humidity value as integer
 	 */
 	public int getHumidityInteger() 
 	{
@@ -77,7 +77,7 @@ public class TempBean implements Serializable
 	
 	/**
 	 * 
-	 * @param humidity
+	 * @param humidity - String value
 	 */
 	public void setHumidity(String humidity) 
 	{

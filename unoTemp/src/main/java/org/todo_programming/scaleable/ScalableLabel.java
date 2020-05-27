@@ -34,10 +34,8 @@ public class ScalableLabel extends JLabel implements ComponentListener
 	}
 	
 	/**
-	 * Default scales to 100% parents size
 	 * 
-	 * @param string - Text displayed
-	 * @param font - Font used
+	 * @param string to initialize label with
 	 */
 	public ScalableLabel(String string) 
 	{
@@ -50,7 +48,7 @@ public class ScalableLabel extends JLabel implements ComponentListener
 	/**
 	 * Default scales to 100% parents size
 	 * 
-	 * @param scalePercent - scale to parent 0.50 -> 50%
+	 * @param scalePercent - scalePercents
 	 */
 	public ScalableLabel(float scalePercent) 
 	{
@@ -63,8 +61,8 @@ public class ScalableLabel extends JLabel implements ComponentListener
 	
 	/**
 	 * User defined scaling of label
-	 * @param string - Text displayed
-	 * @param scalePercent - scale to parent 0.50 -> 50%
+	 * @param string Text displayed
+	 * @param scalePercent s to parent
 	 */
 	public ScalableLabel(String string, float scalePercent) 
 	{
@@ -75,9 +73,9 @@ public class ScalableLabel extends JLabel implements ComponentListener
 	}
 	
 	/**
-	 * Default scales to 100% parents size
 	 * 
-	 * @param string - Text displayed
+	 * @param string default label text
+	 * @param fontName as string
 	 */
 	public ScalableLabel(String string, String fontName) 
 	{
