@@ -8,14 +8,10 @@ import org.todo_programming.Serial.SerialTemperatureComms;
  */
 public class App 
 {
-	/**
-	 * 
-	 * @param args command line arguments
-	 */
     public static void main( String[] args )
     {
     	TempBean tempDataBean = new TempBean();
-    	new SerialTemperatureComms("COM8",tempDataBean);
-    	new MainFrame("COM8",tempDataBean);    
+     	new SerialTemperatureComms(tempDataBean);
+    	new MainFrame(tempDataBean); 
     }
 }

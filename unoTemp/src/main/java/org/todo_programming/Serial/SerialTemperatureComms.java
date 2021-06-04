@@ -12,10 +12,14 @@ import com.fazecast.jSerialComm.SerialPortEvent;
  */
 public class SerialTemperatureComms  
 {
-	SerialPort[] ports;			//All available ports
-	SerialPort commPort;		//Port data is coming from
-	String data;				//String buffer for serial data
-	TempBean bean;				//model of the view
+	/** Port data is coming from */
+	private SerialPort commPort;
+
+	/** String buffer for serial data */
+	private String data;
+
+	/** model of the view */
+	private final TempBean bean;	
 	
 	/**
 	 * Start looking for serial data
@@ -26,16 +30,17 @@ public class SerialTemperatureComms
 	public SerialTemperatureComms(String commPortDescription,TempBean tempBean)
 	{
 		
-		// Initialize attributes
+		//Initialize attributes
 		bean = tempBean;						
-		data = "";									
+		data = "";								
+		ports = SerialPort.getCommPorts();		
 		
-		// Search until port is available with matching name
-		findCorrectSerialPort(commPortDescription);
-
-		// Attempt to open port till connection is established
-		openSerialPort();
-
+		//Connect to port using communication port identifier
+		commPort = SerialPort.getCommPort(commPortDescription);
+		commPort = ports[1];
+		System.out.println(commPort.openPort());
+		commPort.setBaudRate(4500);
+		
 		//Add listener to port
 		commPort.addDataListener(new SerialPortDataListener() 
 		{
@@ -88,73 +93,5 @@ public class SerialTemperatureComms
 			   }
 			
 			});
-	}
-
-	/**
-	 * Will keep search serial ports till the correct one is found
-	 * The correct comm port will have a matching system port name
-	 * ex) COM8 
-	 */
-	public void findCorrectSerialPort(String portDescription)
-	{
-		boolean found = false;
-		long failures = 0;
-
-		while(!found)
-		{
-			ports = SerialPort.getCommPorts();
-			for(int i = 0; i < ports.length; i++)
-			{
-				if(ports[i].getSystemPortName().equals(portDescription))
-				{
-					commPort = ports[i];
-					found = true;
-				}
-			}
-
-			if(!found)
-			{
-				failures += 1;
-
-				try
-				{
-					Thread.sleep(250);
-				}
-
-				catch(Exception e)
-				{
-					System.out.println("Thread interupt Exception");
-				}
-
-				System.out.println("search attempt for  \"" + portDescription + "\"" + " has happened " + failures + " times");
-			}
-		}
-
-	}
-
-	/**
-	 * Will continue to try and open serial port untill it is open
-	 * If any other device is talking to the device liste then this function will not exit
-	 */
-	public void openSerialPort()
-	{
-		long failures = 0;
-		while(!commPort.openPort())
-		{
-			try
-			{
-				Thread.sleep(250);
-			}
-
-			catch(Exception e)
-			{
-				System.out.println("Thread interupt Exception");
-			}
-
-			failures +=1;
-			System.out.println("Open port failed "  + failures + " times on " + commPort.getSystemPortName());
-		}
-
-		commPort.setBaudRate(9600);
 	}
 }
