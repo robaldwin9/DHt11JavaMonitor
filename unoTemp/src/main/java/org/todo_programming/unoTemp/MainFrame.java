@@ -36,11 +36,11 @@ public class MainFrame extends JFrame implements PropertyChangeListener, KeyList
 	/** Label for humidity */
 	private final ScalableLabel lblHumidity;
 
+	/** Application configuration */
 	private final Config config = Config.getInstance();
 	
 	/**
-	 * 
-	 * @param commPort - Serial port where the DHt11 data is coming from
+	 *
 	 * @param data - contains updated Temperature data after it is collected from the Serial Port
 	 */
 	public MainFrame(TempBean data)
@@ -50,7 +50,9 @@ public class MainFrame extends JFrame implements PropertyChangeListener, KeyList
 
 		/* Label initialization*/
 		lblTemp = new ScalableLabel("0F",0.20f);
+		lblTemp.setForeground(config.getLabelColor());
 		lblHumidity = new ScalableLabel("0%",0.20f);
+		lblHumidity.setForeground(config.getLabelColor());
 		
 		/* layout Init */
 		GridBagLayout layout = new GridBagLayout();
@@ -100,19 +102,19 @@ public class MainFrame extends JFrame implements PropertyChangeListener, KeyList
 				lblTemp.setText(tempBean.getTemp());
 				if(tempBean.getTempInteger() >= 80)
 				{
-					getRootPane().setBorder(BorderFactory.createMatteBorder(7, 7, 7, 7, Color.RED));
+					getRootPane().setBorder(BorderFactory.createMatteBorder(7, 7, 7, 7, config.getBorderColor1()));
 					getContentPane().setBackground(config.getBackgroundColor1());
 				}
 
 				else if(tempBean.getTempInteger() >=65)
 				{
-					getRootPane().setBorder(BorderFactory.createMatteBorder(7, 7, 7, 7, new Color(255,99,8)));
+					getRootPane().setBorder(BorderFactory.createMatteBorder(7, 7, 7, 7, config.getBorderColor2()));
 					getContentPane().setBackground(config.getBackgroundColor2());
 				}
 
 				else if(tempBean.getTempInteger() < 65)
 				{
-					getRootPane().setBorder(BorderFactory.createMatteBorder(7, 7, 7, 7, Color.BLUE));
+					getRootPane().setBorder(BorderFactory.createMatteBorder(7, 7, 7, 7, config.getBorderColor3()));
 					getContentPane().setBackground(config.getBackgroundColor3());
 				}
 

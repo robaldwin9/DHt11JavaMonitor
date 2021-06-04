@@ -8,15 +8,24 @@ public class TempBean implements Serializable
 {
 	/** UID of class */
 	private static final long serialVersionUID = -5067790505985875022L;
+
+	/** Temperature Value */
 	private String temperature;
+
+	/** Humidity Value*/
 	private String humidity;
-	private PropertyChangeSupport observer;
-	
+
+	/** Observer pattern object */
+	private final PropertyChangeSupport observer;
+
+	/** Temperature changed event */
 	public static final String UPDATED_TEMPERATURE = "tempUpdate";
+
+	/** Humidity changed event */
 	public static final String UPDATED_HUMIDITY = "humidUpdate";
 	
 	/**
-	 * 
+	 *  Model for temperature values
 	 */
 	TempBean()
 	{
@@ -24,14 +33,7 @@ public class TempBean implements Serializable
 		humidity = "0";
 		observer = new PropertyChangeSupport(this);
 	}
-	
-	/**
-	 * 
-	 */
-	TempBean(String temperature, String humidity)
-	{
-		
-	}
+
 	/**
 	 * 
 	 * @return temperature string
@@ -68,15 +70,6 @@ public class TempBean implements Serializable
 	
 	/**
 	 * 
-	 * @return - Humidity value as integer
-	 */
-	public int getHumidityInteger() 
-	{
-		return Integer.parseInt(temperature);
-	}
-	
-	/**
-	 * 
 	 * @param humidity - String value
 	 */
 	public void setHumidity(String humidity) 
@@ -85,7 +78,11 @@ public class TempBean implements Serializable
 		this.humidity = humidity;
 		this.observer.firePropertyChange(UPDATED_HUMIDITY, oldValue, humidity);
 	}
-	
+
+	/**
+	 *
+	 * @param listener property change listener
+	 */
 	public void addPropertyChangeListener(PropertyChangeListener listener)
 	{
 		observer.addPropertyChangeListener(listener);

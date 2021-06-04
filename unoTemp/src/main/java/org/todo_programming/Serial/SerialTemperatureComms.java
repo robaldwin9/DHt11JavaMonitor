@@ -17,7 +17,7 @@ public class SerialTemperatureComms
 	private SerialPort commPort;
 
 	/** String buffer for serial data */
-	private String data;
+	private StringBuilder data;
 
 	/** model of the view */
 	private final TempBean bean;
@@ -29,59 +29,56 @@ public class SerialTemperatureComms
 	 */
 	public SerialTemperatureComms(TempBean tempBean)
 	{
-
-		//Initialize attributes
+		/* Initialize attributes */
 		bean = tempBean;
-		data = "";
+		data = new StringBuilder();
 
-
-		//Connect to port using communication port identifier
+		/* Connect to port using communication port identifier */
 		Config config = Config.getInstance();
 		findCorrectSerialPort(config.getSerialPort());
 		openSerialPort();
 
-
-		//Add listener to port
+		/* Add listener to port */
 		commPort.addDataListener(new SerialPortDataListener()
 		{
 			public int getListeningEvents() { return SerialPort.LISTENING_EVENT_DATA_AVAILABLE; }
 
 			public void serialEvent(SerialPortEvent event)
 			{
-			   //Data not available return
+			   /* Data not available return */
 			   if (event.getEventType() != SerialPort.LISTENING_EVENT_DATA_AVAILABLE)
 			   {
 			      return;
 			   }
 
-			   //Read serial bytes from communication port
+			   /* Read serial bytes from communication port */
 			   byte[] newData = new byte[8];
 			   commPort.readBytes(newData, newData.length);
 
-			   //iterate over data for data collection/conversion
+			   /* iterate over data for data collection/conversion */
 				for (byte newDatum : newData)
 				{
-					//convert byte to char
+					/* convert byte to char */
 					char serialInput = (char) newDatum;
 
-					//Character is a number or comma
-					if ((int) serialInput >= 48 && (int) serialInput < 58 || (int) serialInput == 44) {
-						//Add string to buffer data
-						data += serialInput;
+					/* Character is a number or comma */
+					if ((int) serialInput >= 48 && (int) serialInput < 58 || (int) serialInput == 44)
+					{
+						data.append(serialInput);
 					}
 
-					// character is E -> end
+					/* character is E -> end */
 					else if ((int) serialInput == 69) {
-						String[] splitData = data.split(",");
+						String[] splitData = data.toString().split(",");
 
-						//Only update if there is Temperature and Humidity data present
+						/* Only update if there is Temperature and Humidity data present */
 						if (splitData.length == 2) {
 							bean.setTemp(splitData[0]);
 							bean.setHumidity(splitData[1]);
 						}
 
-						//clear buffer
-						data = "";
+						/* clear buffer */
+						data.setLength(0);
 						break;
 
 					}
@@ -121,7 +118,7 @@ public class SerialTemperatureComms
 
 				catch(Exception e)
 				{
-					System.out.println("Thread interupt Exception");
+					System.out.println("Thread interrupt Exception");
 				}
 
 				System.out.println("search attempt for  \"" + portDescription + "\"" + " has happened " + failures + " times");
