@@ -1,6 +1,7 @@
 package org.todo_programming.unoTemp;
 
 import java.awt.*;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -53,8 +54,7 @@ public class Config {
 
         try
         {
-
-            String dir = System.getProperty("user.dir");
+            String dir = new File(App.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getParentFile().getPath();
             properties.load(new FileInputStream(dir +"/config.properties"));
             serialPort = properties.getProperty("serialPort");
             backgroundColor1 = createColor(properties.getProperty("backgroundColor1").split(","),backgroundColor1);
@@ -62,7 +62,7 @@ public class Config {
             backgroundColor3 = createColor(properties.getProperty("backgroundColor3").split(","),backgroundColor3);
         }
 
-        catch(IOException e)
+        catch(IOException | URISyntaxException e)
         {
             e.printStackTrace();
         }

@@ -80,7 +80,7 @@ public class MainFrame extends JFrame implements PropertyChangeListener, KeyList
 		
 		getRootPane().setBorder(BorderFactory.createMatteBorder(7, 7, 7, 7, Color.BLUE));
 		getContentPane().setBackground(new Color(86,250, 187));
-		setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getResource("therm.png"))).getImage());
+		setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getClassLoader().getResource("img/therm.png"))).getImage());
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		addKeyListener(this);
 		setTitle("Temperature " + config.getSerialPort());
