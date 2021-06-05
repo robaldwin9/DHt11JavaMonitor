@@ -1,4 +1,4 @@
-# <img src="http://todo-programming.org/img/therm.png" alt="high" style="zoom:25%;" />DHt11JavaMonitor 
+# DHt11JavaMonitor 
 Application reads serial data from Arduino using jSerialComm Java library. This read data is then displayed back to the user in a graphical user interface(GUI).
 
 ## Translations
