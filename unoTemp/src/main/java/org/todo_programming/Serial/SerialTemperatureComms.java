@@ -1,11 +1,14 @@
 package org.todo_programming.Serial;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.todo_programming.unoTemp.Config;
 import org.todo_programming.unoTemp.TempBean;
 
 import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortDataListener;
 import com.fazecast.jSerialComm.SerialPortEvent;
+
 /**
  * Monitors temperature data on Communication Port
  * @author robal
@@ -17,15 +20,18 @@ public class SerialTemperatureComms
 	private SerialPort commPort;
 
 	/** String buffer for serial data */
-	private StringBuilder data;
+	private final StringBuilder data;
 
 	/** model of the view */
 	private final TempBean bean;
 
+	/* log4j instance */
+	static final Logger log = LogManager.getLogger(SerialTemperatureComms.class.getName());
+
 	/**
 	 * Start looking for serial data
 	 *
-	 * @param tempBean			  - Model of the view
+	 * @param tempBean - Model of the view
 	 */
 	public SerialTemperatureComms(TempBean tempBean)
 	{
@@ -35,58 +41,64 @@ public class SerialTemperatureComms
 
 		/* Connect to port using communication port identifier */
 		Config config = Config.getInstance();
-		findCorrectSerialPort(config.getSerialPort());
-		openSerialPort();
 
-		/* Add listener to port */
-		commPort.addDataListener(new SerialPortDataListener()
+		new Thread(() ->
 		{
-			public int getListeningEvents() { return SerialPort.LISTENING_EVENT_DATA_AVAILABLE; }
+			findCorrectSerialPort(config.getSerialPort());
+			openSerialPort();
 
-			public void serialEvent(SerialPortEvent event)
+			/* Add listener to port */
+			commPort.addDataListener(new SerialPortDataListener()
 			{
-			   /* Data not available return */
-			   if (event.getEventType() != SerialPort.LISTENING_EVENT_DATA_AVAILABLE)
-			   {
-			      return;
-			   }
+				public int getListeningEvents() { return SerialPort.LISTENING_EVENT_DATA_AVAILABLE; }
 
-			   /* Read serial bytes from communication port */
-			   byte[] newData = new byte[8];
-			   commPort.readBytes(newData, newData.length);
-
-			   /* iterate over data for data collection/conversion */
-				for (byte newDatum : newData)
+				public void serialEvent(SerialPortEvent event)
 				{
-					/* convert byte to char */
-					char serialInput = (char) newDatum;
+			  	 	/* Data not available return */
+			   		if (event.getEventType() != SerialPort.LISTENING_EVENT_DATA_AVAILABLE)
+			   		{
+			      		return;
+			  	 	}
 
-					/* Character is a number or comma */
-					if ((int) serialInput >= 48 && (int) serialInput < 58 || (int) serialInput == 44)
+			   		/* Read serial bytes from communication port */
+			   		byte[] newData = new byte[8];
+			   		commPort.readBytes(newData, newData.length);
+
+			   		/* iterate over data for data collection/conversion */
+					for (byte newDatum : newData)
 					{
-						data.append(serialInput);
-					}
+						/* convert byte to char */
+						char serialInput = (char) newDatum;
 
-					/* character is E -> end */
-					else if ((int) serialInput == 69) {
-						String[] splitData = data.toString().split(",");
-
-						/* Only update if there is Temperature and Humidity data present */
-						if (splitData.length == 2) {
-							bean.setTemp(splitData[0]);
-							bean.setHumidity(splitData[1]);
+						/* Character is a number or comma */
+						if ((int) serialInput >= 48 && (int) serialInput < 58 || (int) serialInput == 44)
+						{
+							data.append(serialInput);
 						}
 
-						/* clear buffer */
-						data.setLength(0);
-						break;
+						/* character is E -> end */
+						else if ((int) serialInput == 69)
+						{
+							String[] splitData = data.toString().split(",");
 
+							/* Only update if there is Temperature and Humidity data present */
+							if (splitData.length >= 2)
+							{
+								bean.setTemp(splitData[0]);
+								bean.setHumidity(splitData[1]);
+							}
+
+							/* clear buffer */
+							data.setLength(0);
+							break;
 					}
 				}
 
-			   }
+			}
 
-			});
+		});
+
+		}).start();
 	}
 
 
@@ -111,45 +123,39 @@ public class SerialTemperatureComms
 			{
 				failures += 1;
 
-				try
+				if(failures % 100 == 0)
 				{
-					Thread.sleep(250);
+					log.warn("search attempt for  \"" + portDescription + "\"" + " has failed " + failures + " times");
 				}
-
-				catch(Exception e)
-				{
-					System.out.println("Thread interrupt Exception");
-				}
-
-				System.out.println("search attempt for  \"" + portDescription + "\"" + " has happened " + failures + " times");
 			}
 		}
 
 	}
 
 	/**
-	 * Will continue to try and open serial port untill it is open
-	 * If any other device is talking to the device liste then this function will not exit
+	 * Will continue to try and open serial port until it is open
+	 * If any other device is talking to the device listed then this function will not exit
 	 */
 	public void openSerialPort()
 	{
 		long failures = 0;
 		while(!commPort.openPort())
 		{
-			try
-			{
-				Thread.sleep(250);
-			}
-
-			catch(Exception e)
-			{
-				System.out.println("Thread interrupt Exception");
-			}
-
 			failures +=1;
-			System.out.println("Open port failed "  + failures + " times on " + commPort.getSystemPortName());
+
+			if(failures % 100 == 0)
+			{
+				log.warn("Open port failed " + failures + " times on " + commPort.getSystemPortName());
+			}
 		}
 
 		commPort.setBaudRate(9600);
 	}
+
+
+	public void autoConnect()
+	{
+
+	}
+
 }

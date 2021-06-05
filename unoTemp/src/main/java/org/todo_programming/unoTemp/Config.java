@@ -1,5 +1,9 @@
 package org.todo_programming.unoTemp;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.todo_programming.Serial.SerialTemperatureComms;
+
 import java.awt.*;
 import java.io.File;
 import java.io.FileInputStream;
@@ -35,6 +39,9 @@ public class Config {
 
     /** Color of Labels */
     private Color labelColor = Color.BLACK;
+
+    /* log4j instance */
+    static final Logger log = LogManager.getLogger(SerialTemperatureComms.class.getName());
 
     /**
      * Load application config
@@ -80,7 +87,8 @@ public class Config {
 
         catch(IOException | URISyntaxException e)
         {
-            e.printStackTrace();
+            log.error("Error occurred while trying to load config.properties \n{}", e.getMessage());
+            log.warn("Default values will be used instead of user defined values: Default serial port is\n{}", serialPort);
         }
     }
 
@@ -103,6 +111,8 @@ public class Config {
                 catch (NumberFormatException e)
                 {
                     valid = false;
+
+                    log.error("Exception occurred while parsing a color from config.properties: \n{}", e.getMessage());
                     e.printStackTrace();
                 }
             }
@@ -115,7 +125,6 @@ public class Config {
 
         return color;
     }
-
 
     /**
      *

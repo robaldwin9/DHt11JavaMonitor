@@ -117,9 +117,7 @@ public class MainFrame extends JFrame implements PropertyChangeListener, KeyList
 					getRootPane().setBorder(BorderFactory.createMatteBorder(7, 7, 7, 7, config.getBorderColor3()));
 					getContentPane().setBackground(config.getBackgroundColor3());
 				}
-
 			});
-			
 		}
 		
 		//Humidity data updated
