@@ -49,7 +49,15 @@ public class MainFrame extends JFrame implements PropertyChangeListener, KeyList
 		data.addPropertyChangeListener(this);
 
 		/* Label initialization*/
-		lblTemp = new ScalableLabel("0F",0.20f);
+		if(config.getUnits() ==1)
+		{
+			lblTemp = new ScalableLabel("0F", 0.20f);
+		}
+
+		else
+		{
+			lblTemp = new ScalableLabel("0C", 0.20f);
+		}
 		lblTemp.setForeground(config.getLabelColor());
 		lblHumidity = new ScalableLabel("0%",0.20f);
 		lblHumidity.setForeground(config.getLabelColor());

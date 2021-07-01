@@ -40,12 +40,32 @@ public class TempBean implements Serializable
 	 */
 	public String getTemp() 
 	{
-		return temperature + "F";
+
+		if(Config.getInstance().getUnits() == 1)
+		{
+			return temperature + "F";
+		}
+
+		else
+		{
+			return temperature + "C";
+		}
+
 	}
 	
 	public int getTempInteger()
 	{
-		return Integer.parseInt(temperature);
+
+		if(Config.getInstance().getUnits() == 1)
+		{
+			return ((Integer.parseInt((temperature ) )* 9/5) + 32);
+		}
+
+		else
+			{
+			return Integer.parseInt(temperature);
+		}
+
 	}
 	
 	/**
@@ -54,6 +74,10 @@ public class TempBean implements Serializable
 	 */
 	public void setTemp(String temp) 
 	{
+		if(Config.getInstance().getUnits() == 1)
+		{
+			temp = String.valueOf((Integer.parseInt(temp) * 9/5) +32);
+		}
 		String oldValue = temperature;
 		temperature = temp;
 		this.observer.firePropertyChange(UPDATED_TEMPERATURE, oldValue, temp);

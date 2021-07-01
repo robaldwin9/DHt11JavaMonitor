@@ -40,6 +40,10 @@ public class Config {
     /** Color of Labels */
     private Color labelColor = Color.BLACK;
 
+
+    /** Units imperial, or metric */
+    private int units = 0;
+
     /* log4j instance */
     static final Logger log = LogManager.getLogger(SerialTemperatureComms.class.getName());
 
@@ -83,6 +87,7 @@ public class Config {
             backgroundColor3 = createColor(properties.getProperty("backgroundColor3").split(","),backgroundColor3);
             borderColor3 = createColor(properties.getProperty("borderColor3").split(","), borderColor3);
             labelColor = createColor(properties.getProperty("labelColor").split(","), labelColor);
+            units = Integer.parseInt(properties.getProperty("units"));
         }
 
         catch(IOException | URISyntaxException e)
@@ -192,6 +197,14 @@ public class Config {
      */
     public Color getBorderColor3() {
         return borderColor3;
+    }
+
+    /**
+     *
+     * @return units to be used
+     */
+    public int getUnits() {
+        return units;
     }
 
 }

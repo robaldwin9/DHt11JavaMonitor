@@ -25,7 +25,7 @@ void loop()
       return;
   }
   
-  Serial.print((int)temperature * 9/5 + 32); 
+  Serial.print((int)temperature); 
   Serial.print(',');
   Serial.print((int)humidity);
   Serial.print('E');
