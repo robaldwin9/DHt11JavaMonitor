@@ -40,9 +40,17 @@ public class Config {
     /** Color of Labels */
     private Color labelColor = Color.BLACK;
 
-
     /** Units imperial, or metric */
     private int units = 0;
+
+    /** Threshold for 1st color */
+    private int threshold1 = 80;
+
+    /** Threshold for 2nd color */
+    private int threshold2 = 65;
+
+    /** Threshold for 3rd color */
+    private int threshold3 = 65;
 
     /* log4j instance */
     static final Logger log = LogManager.getLogger(SerialTemperatureComms.class.getName());
@@ -88,6 +96,9 @@ public class Config {
             borderColor3 = createColor(properties.getProperty("borderColor3").split(","), borderColor3);
             labelColor = createColor(properties.getProperty("labelColor").split(","), labelColor);
             units = Integer.parseInt(properties.getProperty("units"));
+            threshold1 = Integer.parseInt(properties.getProperty("threshold1"));
+            threshold2 = Integer.parseInt(properties.getProperty("threshold2"));
+            threshold1 = Integer.parseInt(properties.getProperty("threshold3"));
         }
 
         catch(IOException | URISyntaxException e)
@@ -203,8 +214,36 @@ public class Config {
      *
      * @return units to be used
      */
-    public int getUnits() {
+    public int getUnits()
+    {
         return units;
+    }
+
+    /**
+     *
+     * @return threshold for first color
+     */
+    public int getThreshold1()
+    {
+        return threshold1;
+    }
+
+    /**
+     *
+     * @return threshold for second color
+     */
+    public int getThreshold2()
+    {
+        return threshold2;
+    }
+
+    /**
+     *
+     * @return threshold for third color
+     */
+    public int getThreshold3()
+    {
+        return threshold3;
     }
 
 }

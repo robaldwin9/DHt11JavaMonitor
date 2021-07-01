@@ -108,19 +108,19 @@ public class MainFrame extends JFrame implements PropertyChangeListener, KeyList
 		{
 			javax.swing.SwingUtilities.invokeLater(() -> {
 				lblTemp.setText(tempBean.getTemp());
-				if(tempBean.getTempInteger() >= 80)
+				if(tempBean.getTempInteger() >= config.getThreshold1())
 				{
 					getRootPane().setBorder(BorderFactory.createMatteBorder(7, 7, 7, 7, config.getBorderColor1()));
 					getContentPane().setBackground(config.getBackgroundColor1());
 				}
 
-				else if(tempBean.getTempInteger() >=65)
+				else if(tempBean.getTempInteger() >= config.getThreshold2())
 				{
 					getRootPane().setBorder(BorderFactory.createMatteBorder(7, 7, 7, 7, config.getBorderColor2()));
 					getContentPane().setBackground(config.getBackgroundColor2());
 				}
 
-				else if(tempBean.getTempInteger() < 65)
+				else if(tempBean.getTempInteger() < config.getThreshold3())
 				{
 					getRootPane().setBorder(BorderFactory.createMatteBorder(7, 7, 7, 7, config.getBorderColor3()));
 					getContentPane().setBackground(config.getBackgroundColor3());
