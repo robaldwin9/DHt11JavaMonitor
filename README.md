@@ -44,7 +44,9 @@ Application reads serial data from Arduino using jSerialComm Java library. This 
 
      :heavy_check_mark:Added Logj4 logging for better debugging
 
-    ​ :heavy_check_mark:Added Threading
+     :heavy_check_mark:Added threading
+     
+     :heavy_check_mark: Added configurable temp thresholds, and units​
 
 ##  :desktop_computer: Build/Load Arduino Sketch
 
