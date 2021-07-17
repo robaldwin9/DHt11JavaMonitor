@@ -5,29 +5,58 @@
  *      GND: GND
  *      DATA: 2
 */      
+typedef struct 
+{
+  int pin;
+  int treshold;
+  int value;
+  String sensor_type;
+  
+}gas_sensor;
 
+ gas_sensor create_gas_sensor(String sensor_type, int pin)
+{
+  gas_sensor sensor;
+  sensor.pin = pin;
+  sensor.sensor_type = sensor_type;
+  return sensor;
+}
 int pinDHT11 = 2;
 SimpleDHT11 dht11;
+gas_sensor mq2 = create_gas_sensor("MQ-135",  A1);
+
 
 void setup()
 {
   Serial.begin(9600);
+  pinMode(mq2.pin, INPUT);
 }
 
 void loop() 
+{
+  temperature_read();
+  gas_sensor_read(mq2);
+}
+
+
+void temperature_read()
 {
   byte temperature = 0;
   byte humidity = 0;
   
   if (SimpleDHTErrSuccess != dht11.read(pinDHT11, &temperature, &humidity, NULL)) 
   {
-      Serial.println("ERROR: unable to read data from DHt11 sensor please verify your wiring");
       return;
   }
-  
-  Serial.print((int)temperature); 
-  Serial.print(',');
-  Serial.print((int)humidity);
-  Serial.print('E');
-  delay(1500);
+
+  Serial.println("Temp:" + String((int)temperature) + String("E"));
+  Serial.println("Humid:" + String((int)humidity) + String("E"));
+
+}
+
+
+void gas_sensor_read(gas_sensor sensor)
+{
+  mq2.value = analogRead(mq2.pin);
+  Serial.println(mq2.sensor_type + ':' + String(mq2.value) + String("E"));
 }

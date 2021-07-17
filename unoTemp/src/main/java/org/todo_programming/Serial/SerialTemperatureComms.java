@@ -9,6 +9,8 @@ import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortDataListener;
 import com.fazecast.jSerialComm.SerialPortEvent;
 
+import java.nio.charset.StandardCharsets;
+
 /**
  * Monitors temperature data on Communication Port
  * @author robal
@@ -61,37 +63,27 @@ public class SerialTemperatureComms
 			  	 	}
 
 			   		/* Read serial bytes from communication port */
-			   		byte[] newData = new byte[8];
+			   		byte[] newData = new byte[16];
 			   		commPort.readBytes(newData, newData.length);
 
-			   		/* iterate over data for data collection/conversion */
-					for (byte newDatum : newData)
-					{
+					for (byte newDatum : newData) {
 						/* convert byte to char */
-						char serialInput = (char) newDatum;
+						Character serialInput = (char) newDatum;
 
-						/* Character is a number or comma */
-						if ((int) serialInput >= 48 && (int) serialInput < 58 || (int) serialInput == 44)
+						if(Character.isWhitespace(serialInput))
 						{
-							data.append(serialInput);
+							continue;
 						}
 
-						/* character is E -> end */
-						else if ((int) serialInput == 69)
+						data.append(serialInput);
+
+						/* Indicates the end of a value */
+						if (serialInput.equals('E'))
 						{
-							String[] splitData = data.toString().split(",");
-
-							/* Only update if there is Temperature and Humidity data present */
-							if (splitData.length >= 2)
-							{
-								bean.setTemp(splitData[0]);
-								bean.setHumidity(splitData[1]);
-							}
-
-							/* clear buffer */
+							parseData(data.toString());
 							data.setLength(0);
 							break;
-					}
+						}
 				}
 
 			}
@@ -101,7 +93,28 @@ public class SerialTemperatureComms
 		}).start();
 	}
 
+	private void parseData(String serialData)
+	{
+		if(serialData.contains("Temp:"))
+		{
+			String value = serialData.replaceAll("[^0-9]", "");
+			log.info(serialData);
+			bean.setTemp(value);
+			log.info(value);
+		}
 
+		else if (serialData.contains("Humid:"))
+		{
+			log.info("humid update");
+			String value = serialData.replaceAll("[^0-9]", "");
+			bean.setHumidity(value);
+		}
+
+		else if(serialData.contains("MQ-135:"))
+		{
+			String value = serialData.replaceAll("[^0-9]", "");
+		}
+	}
 	public void findCorrectSerialPort(String portDescription)
 	{
 		boolean found = false;
