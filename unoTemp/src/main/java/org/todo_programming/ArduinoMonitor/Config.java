@@ -1,4 +1,4 @@
-package org.todo_programming.unoTemp;
+package org.todo_programming.ArduinoMonitor;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

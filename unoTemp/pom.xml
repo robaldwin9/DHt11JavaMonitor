@@ -66,7 +66,7 @@
         		<configuration>
         			<archive>
   						<manifest>
-						<mainClass>org.todo_programming.unoTemp.App</mainClass>
+						<mainClass>org.todo_programming.ArduinoMonitor.App</mainClass>
 						</manifest>
 					</archive>
         		<appendAssemblyId>false</appendAssemblyId>
@@ -85,7 +85,7 @@
 				<finalName>unoTemp</finalName>
 				<archive>
 					<manifest>
-						<mainClass>org.todo_programming.unoTemp.App</mainClass>
+						<mainClass>org.todo_programming.ArduinoMonitor.App</mainClass>
 					</manifest>
 				</archive>
 			</configuration>

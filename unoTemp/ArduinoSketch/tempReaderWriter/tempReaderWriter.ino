@@ -23,7 +23,7 @@ typedef struct
 }
 int pinDHT11 = 2;
 SimpleDHT11 dht11;
-gas_sensor mq2 = create_gas_sensor("MQ-135",  A1);
+gas_sensor mq2 = create_gas_sensor("MQ-airQuality",  A1);
 
 
 void setup()
