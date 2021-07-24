@@ -52,6 +52,9 @@ public class Config {
     /** Threshold for 3rd color */
     private int threshold3 = 65;
 
+    /** 0 not enabled and 1 is enabled */
+    private int airQualityEnable = 0;
+
     /* log4j instance */
     static final Logger log = LogManager.getLogger(SerialTemperatureComms.class.getName());
 
@@ -99,6 +102,7 @@ public class Config {
             threshold1 = Integer.parseInt(properties.getProperty("threshold1"));
             threshold2 = Integer.parseInt(properties.getProperty("threshold2"));
             threshold1 = Integer.parseInt(properties.getProperty("threshold3"));
+            airQualityEnable = Integer.parseInt(properties.getProperty("MQ135Enabled"));
         }
 
         catch(IOException | URISyntaxException e)
@@ -246,4 +250,12 @@ public class Config {
         return threshold3;
     }
 
+    /**
+     *
+     * @return true if air quality sensor is wired into controller
+     */
+    public boolean isAirQualitySensorEnabled()
+    {
+        return airQualityEnable == 1;
+    }
 }

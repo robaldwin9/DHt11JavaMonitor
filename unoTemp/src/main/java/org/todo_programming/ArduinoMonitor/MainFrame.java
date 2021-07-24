@@ -10,12 +10,10 @@ import java.awt.event.KeyListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Objects;
+import java.util.Optional;
 
 import javax.swing.*;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.todo_programming.Serial.SerialTemperatureComms;
 import org.todo_programming.scaleable.ScalableLabel;
 
 /**
@@ -40,13 +38,9 @@ public class MainFrame extends JFrame implements PropertyChangeListener, KeyList
 	/** Air Quality */
 	private final ScalableLabel lblAirQualityValue;
 
-	private final ScalableLabel lblAirQualityDescription;
-
 	/** Application configuration */
 	private final Config config = Config.getInstance();
 
-
-	
 	/**
 	 *
 	 * @param data - contains updated Temperature data after it is collected from the Serial Port
@@ -67,15 +61,19 @@ public class MainFrame extends JFrame implements PropertyChangeListener, KeyList
 			lblTempValue = new ScalableLabel("0C", 0.20f);
 		}
 
-		lblAirQualityValue = new ScalableLabel("0", 0.20f);
-		lblAirQualityDescription = new ScalableLabel("Air: ", 0.20f);
+
+		/* Temp sensor labels */
 		lblTempValue.setForeground(config.getLabelColor());
 		lblHumidityValue = new ScalableLabel("0%",0.20f);
 		lblHumidityValue.setForeground(config.getLabelColor());
+
+		/* Air quality labels */
+		ScalableLabel lblAirQualityDescription = new ScalableLabel("Air: ", 0.20f);
+		lblAirQualityValue = new ScalableLabel("0", 0.20f);
 		lblAirQualityValue.setForeground(config.getLabelColor());
 		lblAirQualityDescription.setForeground(config.getLabelColor());
 		lblAirQualityValue.setHorizontalAlignment(JLabel.CENTER);
-		
+
 		/* layout Init */
 		GridBagLayout layout = new GridBagLayout();
 		GridBagConstraints constraints = new GridBagConstraints();
@@ -102,15 +100,18 @@ public class MainFrame extends JFrame implements PropertyChangeListener, KeyList
 		constraints.insets = new Insets(1,1,1,1);
 		add(lblHumidityValue,constraints);
 
-		constraints.gridx = 0;
-		constraints.gridy = 1;
-		add(lblAirQualityDescription, constraints);
 
+		if(config.isAirQualitySensorEnabled())
+		{
+			constraints.gridx = 0;
+			constraints.gridy = 1;
+			add(lblAirQualityDescription, constraints);
 
-		constraints.gridx = 1;
-		constraints.gridy = 1;
-		add(lblAirQualityValue, constraints);
-		
+			constraints.gridx = 1;
+			constraints.gridy = 1;
+			add(lblAirQualityValue, constraints);
+		}
+
 		getRootPane().setBorder(BorderFactory.createMatteBorder(7, 7, 7, 7, Color.BLUE));
 		getContentPane().setBackground(new Color(86,250, 187));
 		setIconImage(new ImageIcon(Objects.requireNonNull(getClass().getClassLoader().getResource("img/therm.png"))).getImage());
@@ -170,7 +171,7 @@ public class MainFrame extends JFrame implements PropertyChangeListener, KeyList
 				lblAirQualityValue.setText("Moderate");
 			}
 
-			else
+			else if(quality > 300)
 			{
 				lblAirQualityValue.setText("Bad");
 			}
