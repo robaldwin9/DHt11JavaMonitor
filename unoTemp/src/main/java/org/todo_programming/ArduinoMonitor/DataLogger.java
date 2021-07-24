@@ -2,8 +2,6 @@ package org.todo_programming.ArduinoMonitor;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import javax.xml.crypto.Data;
 import java.util.TimerTask;
 
 public class DataLogger extends TimerTask {

@@ -10,7 +10,6 @@ import java.awt.event.KeyListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Objects;
-import java.util.Optional;
 
 import javax.swing.*;
 
