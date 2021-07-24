@@ -64,7 +64,8 @@ public class SerialTemperatureComms
 			   		byte[] newData = new byte[16];
 			   		commPort.readBytes(newData, newData.length);
 
-					for (byte newDatum : newData) {
+					for (byte newDatum : newData)
+					{
 						/* convert byte to char */
 						Character serialInput = (char) newDatum;
 
@@ -80,15 +81,17 @@ public class SerialTemperatureComms
 							data.setLength(0);
 							break;
 						}
+					}
 				}
-
-			}
-
 		});
 
 		}).start();
 	}
 
+	/**
+	 *
+	 * @param serialData - String sent by controller
+	 */
 	private void parseData(String serialData)
 	{
 		if(serialData.contains("Temp"))
@@ -107,6 +110,11 @@ public class SerialTemperatureComms
 		}
 	}
 
+	/**
+	 * Continually try to connect to port till it is available
+	 *
+	 * @param portDescription string that is the port description
+	 */
 	public void findCorrectSerialPort(String portDescription)
 	{
 		boolean found = false;
@@ -156,11 +164,4 @@ public class SerialTemperatureComms
 
 		commPort.setBaudRate(9600);
 	}
-
-
-	public void autoConnect()
-	{
-
-	}
-
 }

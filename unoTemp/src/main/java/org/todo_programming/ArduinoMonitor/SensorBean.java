@@ -59,7 +59,11 @@ public class SensorBean implements Serializable
 		}
 
 	}
-	
+
+	/**
+	 *
+	 * @return temperature as  integer value
+	 */
 	public int getTempInteger()
 	{
 
@@ -119,7 +123,6 @@ public class SensorBean implements Serializable
 		observer.addPropertyChangeListener(listener);
 	}
 
-
 	/**
 	 *
 	 * @param airQuality air quality value
@@ -149,5 +152,4 @@ public class SensorBean implements Serializable
 	{
 		return Integer.parseInt(airQuality);
 	}
-
 }

@@ -61,7 +61,6 @@ public class MainFrame extends JFrame implements PropertyChangeListener, KeyList
 			lblTempValue = new ScalableLabel("0C", 0.20f);
 		}
 
-
 		/* Temp sensor labels */
 		lblTempValue.setForeground(config.getLabelColor());
 		lblHumidityValue = new ScalableLabel("0%",0.20f);
@@ -99,7 +98,6 @@ public class MainFrame extends JFrame implements PropertyChangeListener, KeyList
 		constraints.gridy = 0;
 		constraints.insets = new Insets(1,1,1,1);
 		add(lblHumidityValue,constraints);
-
 
 		if(config.isAirQualitySensorEnabled())
 		{
@@ -152,7 +150,7 @@ public class MainFrame extends JFrame implements PropertyChangeListener, KeyList
 			});
 		}
 		
-		//Humidity data updated
+		/* Humidity data updated */
 		else if(SensorBean.UPDATED_HUMIDITY.equals(e.getPropertyName()))
 		{
 			javax.swing.SwingUtilities.invokeLater(() -> lblHumidityValue.setText(sensorBean.getHumidity()));
@@ -175,9 +173,7 @@ public class MainFrame extends JFrame implements PropertyChangeListener, KeyList
 			{
 				lblAirQualityValue.setText("Bad");
 			}
-
 		}
-
 	}
 
 	@Override
@@ -210,7 +206,6 @@ public class MainFrame extends JFrame implements PropertyChangeListener, KeyList
 			}
 		}
 	}
-	
 
 	@Override
 	public void keyTyped(KeyEvent e) 
@@ -221,5 +216,4 @@ public class MainFrame extends JFrame implements PropertyChangeListener, KeyList
 	public void keyReleased(KeyEvent e) 
 	{
 	}
-
 }

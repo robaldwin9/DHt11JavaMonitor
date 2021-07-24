@@ -112,7 +112,12 @@ public class Config {
         }
     }
 
-
+    /**
+     *
+     * @param rgbColor rgb color value as string
+     * @param originalColor orig. color
+     * @return Color
+     */
     private Color createColor(String[] rgbColor, Color originalColor)
     {
         Color color = originalColor;

@@ -7,13 +7,20 @@ import javax.xml.crypto.Data;
 import java.util.TimerTask;
 
 public class DataLogger extends TimerTask {
+
+    /** Data from sensors */
     SensorBean data;
 
+    /** Application configuration */
     Config config;
 
     /* log4j instance */
     static final Logger log = LogManager.getLogger(DataLogger.class.getName());
 
+    /**
+     *
+     * @param data current sensor values
+     */
     public DataLogger(SensorBean data)
     {
         this.data = data;
@@ -34,6 +41,10 @@ public class DataLogger extends TimerTask {
         }
 
         log.info("Humidity: {} {}", data.getHumidity(), "%");
-        log.info("Air: {}", data.getAirQualityInt());
+
+        if(config.isAirQualitySensorEnabled())
+        {
+            log.info("Air: {}", data.getAirQualityInt());
+        }
     }
 }
