@@ -32,7 +32,7 @@ public class SerialTemperatureComms extends TimerTask
 
 	private Thread serialThread;
 
-	private final long CONNECTION_TIMEOUT = 10000;
+	private final long CONNECTION_TIMEOUT = 12000;
 
 	/* log4j instance */
 	static final Logger log = LogManager.getLogger(SerialTemperatureComms.class.getName());
@@ -190,13 +190,17 @@ public class SerialTemperatureComms extends TimerTask
 		/* Will try reconnection if serial data not coming for several seconds */
 		if((System.currentTimeMillis() - lastTimeDataReceived) > CONNECTION_TIMEOUT && bean.isControllerConnected())
 		{
-			bean.setControllerConnected(false);
-			log.error("connection lost");
-			commPort.closePort();
-			serialThread = getSerialThread();
-			serialThread.start();
-			findCorrectSerialPort(Config.getInstance().getSerialPort());
-			openSerialPort();
+			if(commPort != null)
+			{
+				bean.setControllerConnected(false);
+				log.error("connection lost");
+				commPort.closePort();
+				serialThread = null;
+				serialThread = getSerialThread();
+				serialThread.start();
+				findCorrectSerialPort(Config.getInstance().getSerialPort());
+				openSerialPort();
+			}
 		}
 
 	}

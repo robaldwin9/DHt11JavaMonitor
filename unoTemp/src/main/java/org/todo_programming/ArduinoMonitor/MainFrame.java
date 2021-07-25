@@ -1,10 +1,6 @@
 package org.todo_programming.ArduinoMonitor;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.beans.PropertyChangeEvent;
@@ -13,6 +9,8 @@ import java.util.Objects;
 
 import javax.swing.*;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.todo_programming.scaleable.ScalableLabel;
 
 /**
@@ -40,36 +38,46 @@ public class MainFrame extends JFrame implements PropertyChangeListener, KeyList
 	/** Application configuration */
 	private final Config config = Config.getInstance();
 
+	/** Shows progress of controller connection */
+	JProgressBar connectionProgress;
+
+	/** Label in progress bar */
+	JLabel progressLabel;
+
+	/* log4j instance */
+	static final Logger log = LogManager.getLogger(MainFrame.class.getName());
+
+	long startTime;
+
 	/**
 	 *
 	 * @param data - contains updated Temperature data after it is collected from the Serial Port
 	 */
 	public MainFrame(SensorBean data)
 	{
+		startTime = System.currentTimeMillis();
 		sensorBean = data;
 		data.addPropertyChangeListener(this);
 
 		/* Label initialization*/
 		if(config.getUnits() ==1)
 		{
-			lblTempValue = new ScalableLabel("0F", 0.20f);
+			lblTempValue = new ScalableLabel("NA", 0.20f);
 		}
 
 		else
 		{
-			lblTempValue = new ScalableLabel("0C", 0.20f);
+			lblTempValue = new ScalableLabel("NA", 0.20f);
 		}
 
 		/* Temp sensor labels */
 		lblTempValue.setForeground(config.getLabelColor());
-		lblHumidityValue = new ScalableLabel("0%",0.20f);
+		lblHumidityValue = new ScalableLabel("NA",0.20f);
 		lblHumidityValue.setForeground(config.getLabelColor());
 
 		/* Air quality labels */
-		ScalableLabel lblAirQualityDescription = new ScalableLabel("Air: ", 0.20f);
-		lblAirQualityValue = new ScalableLabel("0", 0.20f);
+		lblAirQualityValue = new ScalableLabel("Air: NA", 0.20f);
 		lblAirQualityValue.setForeground(config.getLabelColor());
-		lblAirQualityDescription.setForeground(config.getLabelColor());
 		lblAirQualityValue.setHorizontalAlignment(JLabel.CENTER);
 
 		/* layout Init */
@@ -78,7 +86,7 @@ public class MainFrame extends JFrame implements PropertyChangeListener, KeyList
 		setLayout(layout);
 		
 		/* Window Dimensions*/
-		Dimension dim = new Dimension(300,300);
+		Dimension dim = new Dimension(500,500);
 		setPreferredSize(dim);
 		setSize(300, 300);
 		
@@ -102,12 +110,25 @@ public class MainFrame extends JFrame implements PropertyChangeListener, KeyList
 		{
 			constraints.gridx = 0;
 			constraints.gridy = 1;
-			add(lblAirQualityDescription, constraints);
-
-			constraints.gridx = 1;
-			constraints.gridy = 1;
+			constraints.gridwidth = 2;
 			add(lblAirQualityValue, constraints);
 		}
+
+		/* Add progress bar */
+		constraints.gridy = 2;
+		constraints.gridx = 0;
+		constraints.gridwidth = 2;
+		constraints.gridheight = 2;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		connectionProgress = new JProgressBar();
+		connectionProgress.setIndeterminate(true);
+		connectionProgress.setFont(lblTempValue.getFont());
+		connectionProgress.setLayout(new BorderLayout());
+		JLabel progressLabel = new JLabel("connecting...");
+		progressLabel.setHorizontalAlignment(JLabel.CENTER);
+		progressLabel.setVerticalAlignment(JLabel.CENTER);
+		connectionProgress.add(progressLabel,BorderLayout.CENTER);
+		add(connectionProgress, constraints);
 
 		getRootPane().setBorder(BorderFactory.createMatteBorder(7, 7, 7, 7, Color.BLUE));
 		getContentPane().setBackground(new Color(86,250, 187));
@@ -115,7 +136,6 @@ public class MainFrame extends JFrame implements PropertyChangeListener, KeyList
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		addKeyListener(this);
 		setTitle("Monitor " + config.getSerialPort());
-		setExtendedState(JFrame.MAXIMIZED_BOTH);
 		setVisible(true);
 	}
 	
@@ -158,19 +178,36 @@ public class MainFrame extends JFrame implements PropertyChangeListener, KeyList
 		else if(SensorBean.UPDATED_AIR_QUALITY.equals(e.getPropertyName()))
 		{
 			int quality = sensorBean.getAirQualityInt();
-			if(quality < 175)
+			if(quality < 200)
 			{
-				lblAirQualityValue.setText("Good");
+				lblAirQualityValue.setText("Air: Good");
 			}
 
 			else if(quality > 200 && quality < 300)
 			{
-				lblAirQualityValue.setText("Moderate");
+				lblAirQualityValue.setText("Air: Moderate");
 			}
 
 			else if(quality > 300)
 			{
-				lblAirQualityValue.setText("Bad");
+				lblAirQualityValue.setText("Air: Bad");
+			}
+		}
+
+		else if(SensorBean.UPDATE_CONTROLLER_CONNECTION.equals(e.getPropertyName()))
+		{
+			if(sensorBean.isControllerConnected())
+			{
+				javax.swing.SwingUtilities.invokeLater(() ->connectionProgress.setVisible(false));
+				javax.swing.SwingUtilities.invokeLater(() ->connectionProgress.setEnabled(false));
+				log.info("set visible false");
+			}
+
+			else
+			{
+				javax.swing.SwingUtilities.invokeLater(() ->connectionProgress.setVisible(true));
+				javax.swing.SwingUtilities.invokeLater(() ->connectionProgress.setEnabled(true));
+				javax.swing.SwingUtilities.invokeLater(() ->progressLabel.setText("connecting..."));
 			}
 		}
 	}
@@ -188,7 +225,6 @@ public class MainFrame extends JFrame implements PropertyChangeListener, KeyList
 			else
 			{
 				setAlwaysOnTop(true);
-				System.out.println("Always on top set: true");
 			}
 		}
 		

@@ -15,10 +15,10 @@ public class App
     public static void main( String[] args )
     {
     	SensorBean sensorBean = new SensorBean();
+		new MainFrame(sensorBean);
      	new SerialTemperatureComms(sensorBean);
-    	new MainFrame(sensorBean);
     	Timer dataLogTimer = new Timer("sensorData");
     	TimerTask task = new  DataLogger(sensorBean);
-        dataLogTimer.scheduleAtFixedRate(task, 0, 60000);
+        dataLogTimer.scheduleAtFixedRate(task, 12000, 60000);
     }
 }

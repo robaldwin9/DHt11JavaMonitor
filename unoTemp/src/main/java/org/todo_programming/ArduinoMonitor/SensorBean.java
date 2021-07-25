@@ -1,5 +1,8 @@
 package org.todo_programming.ArduinoMonitor;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.Serializable;
@@ -25,7 +28,7 @@ public class SensorBean implements Serializable
 	public static final String UPDATED_HUMIDITY = "humidUpdate";
 
 	/** Air quality changed event*/
-	public static final String UPDATED_AIR_QUALITY = "airupdate";
+	public static final String UPDATED_AIR_QUALITY = "airUpdate";
 
 	/** Controller connected */
 	public static final String UPDATE_CONTROLLER_CONNECTION = "controlUpdate";
@@ -53,7 +56,6 @@ public class SensorBean implements Serializable
 	 */
 	public String getTemp() 
 	{
-
 		if(Config.getInstance().getUnits() == 1)
 		{
 			return temperature + "F";
@@ -63,7 +65,6 @@ public class SensorBean implements Serializable
 		{
 			return temperature + "C";
 		}
-
 	}
 
 	/**
@@ -131,13 +132,13 @@ public class SensorBean implements Serializable
 
 	/**
 	 *
-	 * @param controllerConnected is controller connected
+	 * @param connected is controller connected
 	 */
-	public void setControllerConnected(boolean controllerConnected)
+	public void setControllerConnected(boolean connected)
 	{
 		boolean oldValue = this.controllerConnected;
-		this.controllerConnected = controllerConnected;
-		this.observer.firePropertyChange(UPDATE_CONTROLLER_CONNECTION, oldValue, controllerConnected);
+		this.controllerConnected = connected;
+		this.observer.firePropertyChange(UPDATE_CONTROLLER_CONNECTION, oldValue, this.controllerConnected);
 	}
 
 	/**
