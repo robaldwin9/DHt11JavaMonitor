@@ -28,17 +28,9 @@ public class DataLogger extends TimerTask {
     @Override
     public void run()
     {
-        if(config.getUnits() == 1)
-        {
-            log.info("Temp: {} {}", data.getTemp(), "F");
-        }
-
-        else
-        {
-            log.info("Temp: {} {}", data.getTemp(), "C");
-        }
-
-        log.info("Humidity: {} {}", data.getHumidity(), "%");
+        log.info("Temp: {}", data.getTemp());
+        log.info("Temp: {}", data.getTemp());
+        log.info("Humidity: {}", data.getHumidity());
 
         if(config.isAirQualitySensorEnabled())
         {
