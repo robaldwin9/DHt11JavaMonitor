@@ -28,13 +28,15 @@ public class DataLogger extends TimerTask {
     @Override
     public void run()
     {
-        log.info("Temp: {}", data.getTemp());
-        log.info("Temp: {}", data.getTemp());
-        log.info("Humidity: {}", data.getHumidity());
-
-        if(config.isAirQualitySensorEnabled())
+        if(data.isControllerConnected())
         {
-            log.info("Air: {}", data.getAirQualityInt());
+            log.info("Temp: {}", data.getTemp());
+            log.info("Humidity: {}", data.getHumidity());
+
+            if (config.isAirQualitySensorEnabled())
+            {
+                log.info("Air: {}", data.getAirQualityInt());
+            }
         }
     }
 }

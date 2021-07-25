@@ -27,8 +27,14 @@ public class SensorBean implements Serializable
 	/** Air quality changed event*/
 	public static final String UPDATED_AIR_QUALITY = "airupdate";
 
+	/** Controller connected */
+	public static final String UPDATE_CONTROLLER_CONNECTION = "controlUpdate";
+
 	/** air quality Value */
 	private String airQuality;
+
+	/** Is the controller connected */
+	private boolean controllerConnected = false;
 	
 	/**
 	 *  Model for temperature values
@@ -112,6 +118,26 @@ public class SensorBean implements Serializable
 		String oldValue = this.humidity;
 		this.humidity = humidity;
 		this.observer.firePropertyChange(UPDATED_HUMIDITY, oldValue, humidity);
+	}
+
+	/**
+	 *
+	 * @return is controller connected
+	 */
+	public boolean isControllerConnected()
+	{
+		return controllerConnected;
+	}
+
+	/**
+	 *
+	 * @param controllerConnected is controller connected
+	 */
+	public void setControllerConnected(boolean controllerConnected)
+	{
+		boolean oldValue = this.controllerConnected;
+		this.controllerConnected = controllerConnected;
+		this.observer.firePropertyChange(UPDATE_CONTROLLER_CONNECTION, oldValue, controllerConnected);
 	}
 
 	/**

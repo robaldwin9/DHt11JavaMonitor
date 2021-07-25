@@ -17,8 +17,8 @@ public class App
     	SensorBean sensorBean = new SensorBean();
      	new SerialTemperatureComms(sensorBean);
     	new MainFrame(sensorBean);
-    	Timer dataLogTimer = new Timer("Timer");
+    	Timer dataLogTimer = new Timer("sensorData");
     	TimerTask task = new  DataLogger(sensorBean);
-        dataLogTimer.scheduleAtFixedRate(task, 0, 1000);
+        dataLogTimer.scheduleAtFixedRate(task, 0, 60000);
     }
 }

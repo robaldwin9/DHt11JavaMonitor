@@ -9,12 +9,15 @@ import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortDataListener;
 import com.fazecast.jSerialComm.SerialPortEvent;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 /**
  * Monitors temperature data on Communication Port
  * @author robal
  *
  */
-public class SerialTemperatureComms
+public class SerialTemperatureComms extends TimerTask
 {
 	/** Port data is coming from */
 	private SerialPort commPort;
@@ -24,6 +27,12 @@ public class SerialTemperatureComms
 
 	/** model of the view */
 	private final SensorBean bean;
+
+	private long lastTimeDataReceived;
+
+	private Thread serialThread;
+
+	private final long CONNECTION_TIMEOUT = 10000;
 
 	/* log4j instance */
 	static final Logger log = LogManager.getLogger(SerialTemperatureComms.class.getName());
@@ -39,12 +48,18 @@ public class SerialTemperatureComms
 		bean = tempBean;
 		data = new StringBuilder();
 
-		/* Connect to port using communication port identifier */
-		Config config = Config.getInstance();
+		serialThread = getSerialThread();
+		serialThread.start();
 
-		new Thread(() ->
+		Timer connectionTimer = new Timer("connectionMonitor");
+		connectionTimer.scheduleAtFixedRate(this, 0, CONNECTION_TIMEOUT);
+	}
+
+	private Thread getSerialThread()
+	{
+		return new Thread(() ->
 		{
-			findCorrectSerialPort(config.getSerialPort());
+			findCorrectSerialPort(Config.getInstance().getSerialPort());
 			openSerialPort();
 
 			/* Add listener to port */
@@ -54,18 +69,21 @@ public class SerialTemperatureComms
 
 				public void serialEvent(SerialPortEvent event)
 				{
-			  	 	/* Data not available return */
-			   		if (event.getEventType() != SerialPort.LISTENING_EVENT_DATA_AVAILABLE)
-			   		{
-			      		return;
-			  	 	}
+					/* Data not available return */
+					if (event.getEventType() != SerialPort.LISTENING_EVENT_DATA_AVAILABLE)
+					{
+						return;
+					}
 
-			   		/* Read serial bytes from communication port */
-			   		byte[] newData = new byte[16];
-			   		commPort.readBytes(newData, newData.length);
+					/* Read serial bytes from communication port */
+					byte[] newData = new byte[16];
+					commPort.readBytes(newData, newData.length);
+
 
 					for (byte newDatum : newData)
 					{
+						lastTimeDataReceived = System.currentTimeMillis();
+
 						/* convert byte to char */
 						Character serialInput = (char) newDatum;
 
@@ -83,9 +101,9 @@ public class SerialTemperatureComms
 						}
 					}
 				}
-		});
+			});
 
-		}).start();
+		});
 	}
 
 	/**
@@ -161,6 +179,26 @@ public class SerialTemperatureComms
 			}
 		}
 
+		lastTimeDataReceived = System.currentTimeMillis();
+		bean.setControllerConnected(true);
 		commPort.setBaudRate(9600);
 	}
+
+	@Override
+	public void run()
+	{
+		/* Will try reconnection if serial data not coming for several seconds */
+		if((System.currentTimeMillis() - lastTimeDataReceived) > CONNECTION_TIMEOUT && bean.isControllerConnected())
+		{
+			bean.setControllerConnected(false);
+			log.error("connection lost");
+			commPort.closePort();
+			serialThread = getSerialThread();
+			serialThread.start();
+			findCorrectSerialPort(Config.getInstance().getSerialPort());
+			openSerialPort();
+		}
+
+	}
+
 }
