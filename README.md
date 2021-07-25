@@ -45,8 +45,20 @@ Application reads serial data from Arduino using jSerialComm Java library. This 
      :heavy_check_mark:Added Logj4 logging for better debugging
 
      :heavy_check_mark:Added threading
-     
+
      :heavy_check_mark: Added configurable temp thresholds, and units​
+
+5. **Version 1.4**
+
+   :heavy_check_mark:Added  ability to reconnect when controller is removed, and then plugged in again. This will decrease the number of times you have to relaunch the java application
+
+   :heavy_check_mark:Added Optional Air quality sensor MQ-135
+
+   :heavy_check_mark: Added logging of values on 1 minute intervals so the data can be collected over time
+
+   :heavy_check_mark: Improved parsing of serial data 
+
+   :heavy_check_mark: Added progress bar that will show whenever the controller is disconnected​
 
 ##  :desktop_computer: Build/Load Arduino Sketch
 
