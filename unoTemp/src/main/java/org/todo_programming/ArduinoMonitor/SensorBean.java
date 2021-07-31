@@ -9,6 +9,10 @@ import java.io.Serializable;
 
 public class SensorBean implements Serializable
 {
+
+	private static SensorBean instance;
+
+
 	/** UID of class */
 	private static final long serialVersionUID = -5067790505985875022L;
 
@@ -42,12 +46,21 @@ public class SensorBean implements Serializable
 	/**
 	 *  Model for temperature values
 	 */
-	SensorBean()
+	private SensorBean()
 	{
 		airQuality = "0";
 		temperature = "0";
 		humidity = "0";
 		observer = new PropertyChangeSupport(this);
+	}
+
+	public static SensorBean getInstance()
+	{
+		if(instance == null)
+		{
+			instance = new SensorBean();
+		}
+		return instance;
 	}
 
 	/**
