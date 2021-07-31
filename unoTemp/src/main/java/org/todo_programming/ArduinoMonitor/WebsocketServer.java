@@ -6,6 +6,8 @@ import org.todo_programming.Serial.SerialTemperatureComms;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Timer;
 import java.util.TimerTask;
 
 @ServerEndpoint("/socket")
@@ -39,6 +41,45 @@ public class WebsocketServer
             case "airQuality":
                 message = data.getAirQualityString();
                 break;
+
+            case "subscribe":
+              TimerTask task = new TimerTask()
+              {
+                  @Override
+                  public void run()
+                  {
+                      try
+                      {
+                        if(session.isOpen()) {
+                            String message = "null";
+                            if (data.isControllerConnected()) {
+                                if (Config.getInstance().isAirQualitySensorEnabled()) {
+                                    message = "temp:" + data.getTemp() + "," + "Humid:" + data.getHumidity() + "," + "airq:" + data.getAirQualityString() +"," + "control:" + data.isControllerConnected();
+                                } else {
+                                    message = "temp:" + data.getTemp() + "," + "Humid:" + data.getHumidity() + "," + "control:" + data.isControllerConnected();
+                                }
+
+                                session.getBasicRemote().sendText(message);
+                            } else {
+                                session.getBasicRemote().sendText(message);
+                            }
+                        }
+
+                        else
+                        {
+                            this.cancel();
+                        }
+                      }
+
+                      catch (IOException e)
+                      {
+                          e.printStackTrace();
+                      }
+                  }
+              };
+                Timer timer = new Timer(true);
+                timer.scheduleAtFixedRate(task, 0,100);
+                break;
             case "quit":
                 try
                 {
@@ -54,8 +95,8 @@ public class WebsocketServer
     }
 
     @OnClose
-    public void onClose(Session session, CloseReason closeReason) {
-
+    public void onClose(Session session, CloseReason closeReason)
+    {
         log.warn(String.format("Session %s closed because of %s", session.getId(), closeReason));
 
     }

@@ -1,5 +1,6 @@
 package org.todo_programming.ArduinoMonitor;
 
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import java.util.TimerTask;
@@ -30,12 +31,12 @@ public class DataLogger extends TimerTask {
     {
         if(data.isControllerConnected())
         {
-            log.info("Temp: {}", data.getTemp());
-            log.info("Humidity: {}", data.getHumidity());
+            log.log(Level.getLevel("DATA"),"Temp: {}", data.getTemp());
+            log.log(Level.getLevel("DATA"), "Humidity: {}", data.getHumidity());
 
             if (config.isAirQualitySensorEnabled())
             {
-                log.info("Air: {}", data.getAirQualityInt());
+                log.log(Level.getLevel("DATA"),"Air: {}", data.getAirQualityInt());
             }
         }
     }

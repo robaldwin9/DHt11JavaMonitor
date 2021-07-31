@@ -55,6 +55,14 @@ public class Config {
     /** 0 not enabled and 1 is enabled */
     private int airQualityEnable = 0;
 
+    private boolean isServer = true;
+
+    private boolean isHeadless = false;
+
+    private boolean dataLogging = true;
+
+    private String ipv4ServerAddress = "localhost";
+
     /* log4j instance */
     static final Logger log = LogManager.getLogger(SerialTemperatureComms.class.getName());
 
@@ -103,6 +111,10 @@ public class Config {
             threshold2 = Integer.parseInt(properties.getProperty("threshold2"));
             threshold1 = Integer.parseInt(properties.getProperty("threshold3"));
             airQualityEnable = Integer.parseInt(properties.getProperty("MQ135Enabled"));
+            isServer = Integer.parseInt(properties.getProperty("websocket")) == 1;
+            isHeadless = Integer.parseInt(properties.getProperty("headless")) == 1;
+            dataLogging = Integer.parseInt(properties.getProperty("datalogging")) == 1;
+            ipv4ServerAddress = properties.getProperty("ipv4ServerAddress");
         }
 
         catch(IOException | URISyntaxException e)
@@ -262,5 +274,41 @@ public class Config {
     public boolean isAirQualitySensorEnabled()
     {
         return airQualityEnable == 1;
+    }
+
+    /**
+     *
+     * @return is websocket server enabled
+     */
+    public boolean isServer()
+    {
+        return isServer;
+    }
+
+    /**
+     *
+     * @return is GUI shown in application
+     */
+    public boolean isHeadless()
+    {
+        return isHeadless;
+    }
+
+    /**
+     *
+     * @return is data logging turned  on
+     */
+    public boolean isDataLogging()
+    {
+        return dataLogging;
+    }
+
+    /**
+     *
+     * @return - ipv4 address
+     */
+    public String getIpv4ServerAddress()
+    {
+        return ipv4ServerAddress;
     }
 }
