@@ -23,19 +23,19 @@ public class SensorBean implements Serializable
 	private String humidity;
 
 	/** Observer pattern object */
-	private final PropertyChangeSupport observer;
+	private transient final PropertyChangeSupport observer;
 
 	/** Temperature changed event */
-	public static final String UPDATED_TEMPERATURE = "tempUpdate";
+	public transient static final String UPDATED_TEMPERATURE = "tempUpdate";
 
 	/** Humidity changed event */
-	public static final String UPDATED_HUMIDITY = "humidUpdate";
+	public transient static final String UPDATED_HUMIDITY = "humidUpdate";
 
 	/** Air quality changed event*/
-	public static final String UPDATED_AIR_QUALITY = "airUpdate";
+	public transient static final String UPDATED_AIR_QUALITY = "airUpdate";
 
 	/** Controller connected */
-	public static final String UPDATE_CONTROLLER_CONNECTION = "controlUpdate";
+	public transient static final String UPDATE_CONTROLLER_CONNECTION = "controlUpdate";
 
 	/** air quality Value */
 	private String airQuality;

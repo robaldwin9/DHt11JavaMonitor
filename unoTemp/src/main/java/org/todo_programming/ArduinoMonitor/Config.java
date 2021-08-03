@@ -14,57 +14,57 @@ import java.util.Properties;
 public class Config {
 
     /** Class instance */
-    private static Config instance = null;
+    private transient static Config instance = null;
 
     /** Serial port of the arduino */
     private String serialPort = "COM6";
 
     /** Background color used for HIGH range of temperature */
-    private Color backgroundColor1 = new Color(250,111,86);
+    private transient Color backgroundColor1 = new Color(250,111,86);
 
     /** Background color used for CENTER range of temperature */
-    private Color backgroundColor2 = new Color(250,193,86);
+    private transient Color backgroundColor2 = new Color(250,193,86);
 
      /** Background color used for LOW range of temperature */
-    private Color  backgroundColor3 = new Color(86,250,187);
+    private transient Color  backgroundColor3 = new Color(86,250,187);
 
     /** Border color for HIGH range temp */
-    private Color borderColor1 = new Color(255,0,0);
+    private transient Color borderColor1 = new Color(255,0,0);
 
     /** Border color for MID range temp */
-    private Color borderColor2 = new Color(255,99,8);
+    private transient Color borderColor2 = new Color(255,99,8);
 
     /** Border color for LOW range temp */
-    private Color borderColor3 = new Color(0,0,255);
+    private transient Color borderColor3 = new Color(0,0,255);
 
     /** Color of Labels */
-    private Color labelColor = Color.BLACK;
+    private transient Color labelColor = Color.BLACK;
 
     /** Units imperial, or metric */
     private int units = 0;
 
     /** Threshold for 1st color */
-    private int threshold1 = 80;
+    private transient int threshold1 = 80;
 
     /** Threshold for 2nd color */
-    private int threshold2 = 65;
+    private transient int threshold2 = 65;
 
     /** Threshold for 3rd color */
-    private int threshold3 = 65;
+    private transient int threshold3 = 65;
 
     /** 0 not enabled and 1 is enabled */
     private int airQualityEnable = 0;
 
-    private boolean isServer = true;
+    private transient boolean isServer = true;
 
-    private boolean isHeadless = false;
+    private transient boolean isHeadless = false;
 
-    private boolean dataLogging = true;
+    private transient boolean dataLogging = true;
 
     private String ipv4ServerAddress = "localhost";
 
     /* log4j instance */
-    static final Logger log = LogManager.getLogger(SerialTemperatureComms.class.getName());
+    static transient final Logger log = LogManager.getLogger(SerialTemperatureComms.class.getName());
 
     /**
      * Load application config

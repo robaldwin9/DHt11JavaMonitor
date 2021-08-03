@@ -1,4 +1,5 @@
 package org.todo_programming.ArduinoMonitor;
+import com.google.gson.Gson;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.todo_programming.Serial.SerialTemperatureComms;
@@ -17,6 +18,8 @@ public class WebsocketServer
 
     /* log4j instance */
     static final Logger log = LogManager.getLogger(WebsocketServer.class.getName());
+
+    private static final Gson gson = new Gson();
 
     @OnOpen
     public void onOpen(Session session)
@@ -41,27 +44,25 @@ public class WebsocketServer
             case "airQuality":
                 message = data.getAirQualityString();
                 break;
-
+            case "config":
+                message = gson.toJson(Config.getInstance());
+                break;
             case "subscribe":
               TimerTask task = new TimerTask()
               {
                   @Override
                   public void run()
                   {
-                      try
-                      {
-                        if(session.isOpen()) {
-                            String message = "null";
-                            if (data.isControllerConnected()) {
-                                if (Config.getInstance().isAirQualitySensorEnabled()) {
-                                    message = "temp:" + data.getTemp() + "," + "Humid:" + data.getHumidity() + "," + "airq:" + data.getAirQualityString() +"," + "control:" + data.isControllerConnected();
-                                } else {
-                                    message = "temp:" + data.getTemp() + "," + "Humid:" + data.getHumidity() + "," + "control:" + data.isControllerConnected();
-                                }
+                        if(session.isOpen())
+                        {
+                            try
+                            {
+                                session.getBasicRemote().sendText(gson.toJson(data));
+                            }
 
-                                session.getBasicRemote().sendText(message);
-                            } else {
-                                session.getBasicRemote().sendText(message);
+                            catch (IOException e)
+                            {
+                                log.error("failed to send subscriber data", e);
                             }
                         }
 
@@ -69,12 +70,6 @@ public class WebsocketServer
                         {
                             this.cancel();
                         }
-                      }
-
-                      catch (IOException e)
-                      {
-                          e.printStackTrace();
-                      }
                   }
               };
                 Timer timer = new Timer(true);
