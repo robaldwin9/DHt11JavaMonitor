@@ -32,7 +32,7 @@ public class DataLogger extends TimerTask {
         if(data.isControllerConnected())
         {
             log.log(Level.getLevel("DATA"),"Temp: {}", data.getTemp());
-            log.log(Level.getLevel("DATA"), "Humidity: {}", data.getHumidity());
+            log.log(Level.getLevel("DATA"),"Humidity: {}", data.getHumidity());
 
             if (config.isAirQualitySensorEnabled())
             {

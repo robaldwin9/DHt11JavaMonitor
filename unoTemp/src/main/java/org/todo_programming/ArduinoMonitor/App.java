@@ -14,31 +14,39 @@ public class App
 {
     public static void main( String[] args )
     {
+    	/* Sensor data object initialization */
     	SensorBean sensorBean = SensorBean.getInstance();
 
+    	/* Run application GUI if not in headless mode */
     	if(!Config.getInstance().isHeadless())
     	{
 			new MainFrame(sensorBean);
 		}
 
+    	/* Serial Data monitor that updates model */
      	new SerialTemperatureComms(sensorBean);
 
-    	if(Config.getInstance().isDataLogging())
+		/* Run data logging task if enabled */
+		if(Config.getInstance().isDataLogging())
     	{
 			Timer dataLogTimer = new Timer("sensorData");
 			TimerTask task = new DataLogger(sensorBean);
 			dataLogTimer.scheduleAtFixedRate(task, 12000, 60000);
 		}
 
+		/* Start websocket sever if enabled in config */
         if(Config.getInstance().isServer())
         {
 			websocketStart();
 		}
     }
 
-    private static void websocketStart()
+	/**
+	 * Starts websocket thread
+	 */
+	private static void websocketStart()
 	{
-		Server server = new Server(Config.getInstance().getIpv4ServerAddress(), 9123, "/climate", WebsocketServer.class);
+		Server server = new Server(Config.getInstance().getIpv4ServerAddress(), Config.getInstance().getServerPort(), "/climate", WebsocketServer.class);
 
 		try
 		{

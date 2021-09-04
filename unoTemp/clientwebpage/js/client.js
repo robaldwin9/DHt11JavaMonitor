@@ -21,7 +21,7 @@ connect()
 
 function connect()
 {
-    socket = new WebSocket("ws://localhost:9123/climate/socket");
+    socket = new WebSocket("ws://192.168.1.21:9123/climate/socket");
 
     socket.onopen = function (event) 
     {
@@ -100,10 +100,12 @@ function draw()
 
   if(data != null)
   {
+    context.textAlign = 'center'
     drawTemp()
     drawHumid()
     drawAirQ()
   }
+    context.textAlign = "left"
     drawDiagnostics()
 }
 
@@ -119,11 +121,11 @@ function drawDiagnostics()
 
     if(controlConnected)
     {
-      context.fillText("WS rate: " + dataRate + " ms", 10, canvas.height - 50, canvas.width/3); 
+      context.fillText("WS rate: " + dataRate + " ms", canvas.width * 0.01, canvas.height - 50, canvas.width/3); 
     }
 
-    context.fillText("controller alive: " + controlConnected, 10, canvas.height -  100, canvas.width/3);
-    context.fillText("ws alive: " + wsalive, 10, canvas.height -  150, canvas.width/3); 
+    context.fillText("controller alive: " + controlConnected, canvas.width * 0.01, canvas.height -  100, canvas.width/3);
+    context.fillText("ws alive: " + wsalive, canvas.width * 0.01, canvas.height -  150, canvas.width/3); 
     if(wsalive == false)
     {
       document.body.insertBefore(btnreconnect, canvas)
@@ -145,11 +147,11 @@ function drawTemp()
       units = "F"
       max = 100
     }
-    context.fillText("Temperature: " + data.temperature + units, canvas.width *0.33, 50, canvas.width/3); 
+    context.fillText("Temperature: " + data.temperature + units, canvas.width * 0.22, 50, canvas.width/3); 
     context.strokeStyle = "red"
     context.lineWidth = 20
     context.beginPath()
-    context.arc(canvas.width*0.33, 150, 75, 0, (2 * Math.PI) * data.temperature/max);
+    context.arc(canvas.width*0.22, 150, 75, 0, (2 * Math.PI) * data.temperature/max);
     context.stroke()
 }
 
@@ -159,12 +161,12 @@ function drawHumid()
   if(data != null)
   {
     context.fillStyle = "#FFFFFF"
-    context.fillText("Humidity: " + data.humidity + "%" , canvas.width * 0.66, 50, canvas.width/3);
+    context.fillText("Humidity: " + data.humidity + "%" , canvas.width * 0.78, 50, canvas.width/3);
     context.strokeStyle = "blue";
     context.lineWidth = 20
     context.beginPath();
     humidity = data.humidity
-    context.arc(canvas.width * 0.66, 150, 75, 0, (2 * Math.PI) * humidity/100);
+    context.arc(canvas.width * 0.78, 150, 75, 0, (2 * Math.PI) * humidity/100);
     context.stroke();
   }
 }
@@ -189,7 +191,6 @@ function drawAirQ()
         quality = "Bad"
       }
 
-    context.textAlign = 'center'
     context.fillText("Air Quality: " + quality,  canvas.width/2, canvas.height/2, canvas.width/3);
     context.strokeStyle = "yellow";
     context.lineWidth = 20

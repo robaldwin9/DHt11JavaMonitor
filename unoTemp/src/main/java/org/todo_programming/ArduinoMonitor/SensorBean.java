@@ -9,9 +9,8 @@ import java.io.Serializable;
 
 public class SensorBean implements Serializable
 {
-
+	/** Singleton instance  */
 	private static SensorBean instance;
-
 
 	/** UID of class */
 	private static final long serialVersionUID = -5067790505985875022L;

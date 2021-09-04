@@ -16,6 +16,8 @@ Application reads serial data from Arduino using jSerialComm Java library. This 
 
 * Do what you want commercial use, and private use are welcome
 
+- [License file](LICENSE)
+
 ## :label: Versions 
 
 1.  **Version 1.0** 
@@ -59,6 +61,18 @@ Application reads serial data from Arduino using jSerialComm Java library. This 
    :heavy_check_mark: Improved parsing of serial data 
 
    :heavy_check_mark: Added progress bar that will show whenever the controller is disconnected​
+   
+6.  **Version 1.5**
+
+     :heavy_check_mark: Added Web socket server
+
+     :heavy_check_mark: Add example client webpage
+
+## Feature Documents
+
+[Websocket server](webSocketServer.md)
+
+
 
 ##  :desktop_computer: Build/Load Arduino Sketch
 

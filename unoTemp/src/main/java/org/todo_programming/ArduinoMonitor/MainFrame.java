@@ -47,6 +47,7 @@ public class MainFrame extends JFrame implements PropertyChangeListener, KeyList
 	/* log4j instance */
 	static final Logger log = LogManager.getLogger(MainFrame.class.getName());
 
+	/** Used to track data rate */
 	long startTime;
 
 	/**

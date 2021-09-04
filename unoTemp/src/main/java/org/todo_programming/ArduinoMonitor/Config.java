@@ -55,13 +55,20 @@ public class Config {
     /** 0 not enabled and 1 is enabled */
     private int airQualityEnable = 0;
 
+    /** Web socket server enabled */
     private transient boolean isServer = true;
 
+    /** No GUI mode */
     private transient boolean isHeadless = false;
 
+    /** Data logging enabled */
     private transient boolean dataLogging = true;
 
+    /** IPV 4 address for websocket */
     private String ipv4ServerAddress = "localhost";
+
+    /** web socket server port */
+    private transient int serverPort = 9123;
 
     /* log4j instance */
     static transient final Logger log = LogManager.getLogger(SerialTemperatureComms.class.getName());
@@ -114,6 +121,7 @@ public class Config {
             isServer = Integer.parseInt(properties.getProperty("websocket")) == 1;
             isHeadless = Integer.parseInt(properties.getProperty("headless")) == 1;
             dataLogging = Integer.parseInt(properties.getProperty("datalogging")) == 1;
+            serverPort = Integer.parseInt(properties.getProperty("websocketport"));
             ipv4ServerAddress = properties.getProperty("ipv4ServerAddress");
         }
 
@@ -310,5 +318,13 @@ public class Config {
     public String getIpv4ServerAddress()
     {
         return ipv4ServerAddress;
+    }
+
+    /**
+     *
+     * @return - web socket server port
+     */
+    public int getServerPort() {
+        return serverPort;
     }
 }
