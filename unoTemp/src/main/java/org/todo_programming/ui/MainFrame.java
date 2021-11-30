@@ -1,4 +1,4 @@
-package org.todo_programming.ArduinoMonitor;
+package org.todo_programming.ui;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -11,6 +11,8 @@ import javax.swing.*;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.todo_programming.ArduinoMonitor.Config;
+import org.todo_programming.ArduinoMonitor.SensorBean;
 import org.todo_programming.scaleable.ScalableLabel;
 
 /**
