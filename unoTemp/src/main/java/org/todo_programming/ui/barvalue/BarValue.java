@@ -1,9 +1,5 @@
 package org.todo_programming.ui.barvalue;
 
-import org.todo_programming.ui.indicator.Indicator;
-import org.todo_programming.ui.indicator.IndicatorModel;
-import org.todo_programming.ui.indicator.IndicatorStatus;
-
 import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
@@ -13,12 +9,33 @@ import java.util.TimerTask;
 
 public class BarValue extends Component implements PropertyChangeListener
 {
-    private BarValueModel model;
+    /** Model for UI element */
+    private final BarValueModel model;
+
+    /** Descriptive text for value being displayed */
+    String barDescription = "";
+
+    /** Units if applicable */
+    String unitsText = "";
 
     public BarValue()
     {
         model = new BarValueModel();
         model.addPropertyChangeListener(this);
+    }
+
+    public BarValue(String valueLabel)
+    {
+        model = new BarValueModel();
+        model.addPropertyChangeListener(this);
+        this.barDescription = valueLabel;
+    }
+
+    public BarValue(String valueLabel, String unitsText)
+    {
+        model = new BarValueModel();
+        model.addPropertyChangeListener(this);
+        this.barDescription = valueLabel;
     }
 
     @Override
@@ -28,38 +45,77 @@ public class BarValue extends Component implements PropertyChangeListener
         Graphics2D g2d = (Graphics2D)(g);
         g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
-        int centerX = getWidth()/2;
-        int centerY = getHeight()/2;
-        int drawHeight;
-        int drawWidth;
-        int stroke;
+        int drawWidth = (int)(getWidth() * 0.90);
+        int drawHeight = (int)(getHeight() * 0.90);
 
-        drawWidth = (int)(getWidth() * 0.90);
-        drawHeight = (int)(getHeight() * 0.90);
-//        if(getHeight() > getWidth())
-//        {
-//            stroke = (int)(getWidth() * 0.15);
-//
-//        }
-//
-//        else
-//        {
-//            stroke = (int)(getHeight() * 0.15);
-//            drawHeight = (int)(getHeight() * 0.90);
-//        }
-
+        /* Draw background */
         GradientPaint gp = new GradientPaint(0, 0, Color.BLACK, drawWidth, drawHeight, Color.gray, true);
         Paint oldPaint = g2d.getPaint();
         g2d.setPaint(gp);
         g2d.fillRect((int)(getWidth() * 0.05f),drawHeight/4, drawWidth, drawHeight/2);
 
+        /* Fill with color based on current value */
         g2d.setPaint(oldPaint);
         g2d.setColor(model.getBarColor());
-        System.out.println("repaint");
-        float fillPercent =  10 - 10/(100f - 10) * 100f;
-        System.out.println("fill percent: " + model.getFillPercent());
         int newWidth = (int)(drawWidth / 100f * model.getFillPercent());
         g2d.fillRect((int)(getWidth() * 0.05f),drawHeight/4, newWidth, drawHeight/2);
+
+        /* Draw current value */
+        String text = model.getCurrentValue() + " " + unitsText;
+        int fontSize = (int)(0.20 * drawHeight);
+        g2d.setFont(new Font("TimesRoman", Font.PLAIN, fontSize));
+        FontMetrics metrics = g2d.getFontMetrics();
+        int x = ((int)(((getWidth() * 0.05f) + drawWidth)) - metrics.stringWidth(text))/2;
+        int y = drawHeight/4 + (drawHeight/4) + metrics.getAscent() - fontSize/2 ;
+        g2d.setColor(Color.WHITE);
+        g2d.drawString(text,x,y);
+
+        /* Draw bar title */
+        x = ((int)(((getWidth() * 0.05f) + drawWidth)) - metrics.stringWidth(barDescription))/2;
+        y = drawHeight/6 ;
+        g2d.setColor(model.getTextColor());
+        g2d.drawString(barDescription, x, y);
+
+        /* Draw min value text */
+        fontSize = (int)(0.10 * drawHeight);
+        g2d.setFont(new Font("TimesRoman", Font.PLAIN, fontSize));
+        metrics = g2d.getFontMetrics();
+        text = String.valueOf(model.getMin());
+        x = (int)(getWidth() * 0.06f) + metrics.stringWidth(text)/2;
+        y = drawHeight/4 +((drawHeight/2 - metrics.getHeight())/2) + metrics.getAscent() + metrics.stringWidth(text)/2;
+        drawRotatedText(g2d, x, y, -90, text);
+
+        /* Draw max value text */
+        text = String.valueOf(model.getMax());
+        x = (int) (drawWidth + (getWidth() * 0.045f));
+        y = drawHeight/4 +((drawHeight/2 - metrics.getHeight())/2) + metrics.getAscent()+ metrics.stringWidth(text)/2;
+        drawRotatedText(g2d, x, y, -90, text);
+    }
+
+    private void drawRotatedText(Graphics2D g2d, double x, double y, int angle, String text)
+    {
+        g2d.translate((float)x,(float)y);
+        g2d.rotate(Math.toRadians(angle));
+        g2d.drawString(text,0,0);
+        g2d.rotate(-Math.toRadians(angle));
+        g2d.translate(-(float)x,-(float)y);
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent propertyChangeEvent)
+    {
+        switch(propertyChangeEvent.getPropertyName())
+        {
+            case BarValueModel.BAR_COLOR_CHANGE_EVENT:
+            case BarValueModel.CURRENT_VALUE_EVENT:
+            case BarValueModel.MIN_CHANGE_EVENT:
+            case BarValueModel.MAX_CHANGE_EVENT:
+            case BarValueModel.TEXT_COLOR_CHANGE_EVENT:
+                repaint();
+                break;
+            default:
+                break;
+        }
     }
 
     public void setCurrentValue(float currentValue)
@@ -67,9 +123,54 @@ public class BarValue extends Component implements PropertyChangeListener
         model.setCurrentValue(currentValue);
     }
 
+    /**
+     *
+     * @param color
+     */
+    public void setBarColor(Color color)
+    {
+        model.setTextColor(color);
+    }
+
+    /**
+     *
+     * @param minValue
+     */
+    public void setMinValue(float minValue)
+    {
+        model.setMin(minValue);
+    }
+
+    /**
+     *
+     * @param maxValue
+     */
+    public void setMaxValue(float maxValue)
+    {
+        model.setMax(maxValue);
+    }
+
+    /**
+     *
+     * @param units
+     */
+    public void setUnitsText(String units)
+    {
+        this.unitsText = units;
+    }
+
+    /**
+     *
+     * @param text
+     */
+    public void setValueDescriptionText(String text)
+    {
+        barDescription = text;
+    }
+
     public static void main(String[] args)
     {
-        BarValue bar = new BarValue();
+        BarValue bar = new BarValue("Temperature");
         JFrame frame = new JFrame();
         frame.getContentPane().setBackground(Color.LIGHT_GRAY);
         frame.setPreferredSize(new Dimension(500,500));
@@ -87,26 +188,9 @@ public class BarValue extends Component implements PropertyChangeListener
                 int min = 0;
                 int max = 100;
                 int status = (int)(Math.random() * (max - min) + min);
-                System.out.println("Status: " + status);
                 bar.setCurrentValue(status);
             }
         };
         uiTimer.scheduleAtFixedRate(task, 2000, 2000);
-    }
-
-    @Override
-    public void propertyChange(PropertyChangeEvent propertyChangeEvent)
-    {
-        switch(propertyChangeEvent.getPropertyName())
-        {
-            case BarValueModel.COLOR_CHANGE_EVENT:
-            case BarValueModel.CURRENT_VALUE_EVENT:
-            case BarValueModel.MIN_CHANGE_EVENT:
-            case BarValueModel.MAX_CHANGE_EVENT:
-                repaint();
-                break;
-            default:
-                break;
-        }
     }
 }

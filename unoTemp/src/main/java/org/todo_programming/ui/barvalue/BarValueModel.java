@@ -10,7 +10,10 @@ public class BarValueModel
     private final SwingPropertyChangeSupport changeSupport;
 
     /** Event fired when color changes */
-    public static final String COLOR_CHANGE_EVENT = "colorChange";
+    public static final String BAR_COLOR_CHANGE_EVENT = "barColor";
+
+    /** Text color */
+    public static final String TEXT_COLOR_CHANGE_EVENT = "textColor";
 
     /** Event fired when min value changes */
     public static final String MIN_CHANGE_EVENT = "minChange";
@@ -18,7 +21,7 @@ public class BarValueModel
     /** Event fired when max value changes */
     public static final String MAX_CHANGE_EVENT = "maxChange";
 
-    /** Event fired when current depicted value chagnes */
+    /** Event fired when current depicted value changes */
     public static final String CURRENT_VALUE_EVENT = "currentValue";
 
     /** value where area starts to fill */
@@ -32,6 +35,9 @@ public class BarValueModel
 
     /** Color used to draw */
     private Color barColor = Color.GREEN;
+
+    /** Color for text on the UI element */
+    private Color textColor = Color.BLACK;
 
     /**
      * Constructor
@@ -115,7 +121,25 @@ public class BarValueModel
      */
     public void setBarColor(Color color)
     {
-        changeSupport.firePropertyChange(COLOR_CHANGE_EVENT, this.barColor, this.barColor = color);
+        changeSupport.firePropertyChange(BAR_COLOR_CHANGE_EVENT, this.barColor, this.barColor = color);
+    }
+
+    /**
+     *
+     * @return color of text
+     */
+    public Color getTextColor()
+    {
+        return textColor;
+    }
+
+    /**
+     *
+     * @param textColor text color to use
+     */
+    public void setTextColor(Color textColor)
+    {
+        changeSupport.firePropertyChange(BAR_COLOR_CHANGE_EVENT, this.textColor, this.textColor = textColor);
     }
 
     /**
