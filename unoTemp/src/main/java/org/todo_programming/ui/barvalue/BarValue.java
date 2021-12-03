@@ -18,12 +18,19 @@ public class BarValue extends Component implements PropertyChangeListener
     /** Units if applicable */
     String unitsText = "";
 
+    /**
+     * Constructor
+     */
     public BarValue()
     {
         model = new BarValueModel();
         model.addPropertyChangeListener(this);
     }
 
+    /**
+     *
+     * @param valueLabel provide label text for UI element
+     */
     public BarValue(String valueLabel)
     {
         model = new BarValueModel();
@@ -31,6 +38,11 @@ public class BarValue extends Component implements PropertyChangeListener
         this.barDescription = valueLabel;
     }
 
+    /**
+     *
+     * @param valueLabel value description
+     * @param unitsText Units to display if any
+     */
     public BarValue(String valueLabel, String unitsText)
     {
         model = new BarValueModel();
@@ -92,6 +104,14 @@ public class BarValue extends Component implements PropertyChangeListener
         drawRotatedText(g2d, x, y, -90, text);
     }
 
+    /**
+     *
+     * @param g2d 2d graphics context
+     * @param x x-coordinate
+     * @param y y-coordinate
+     * @param angle text rotation angle
+     * @param text text to draw
+     */
     private void drawRotatedText(Graphics2D g2d, double x, double y, int angle, String text)
     {
         g2d.translate((float)x,(float)y);
@@ -118,6 +138,10 @@ public class BarValue extends Component implements PropertyChangeListener
         }
     }
 
+    /**
+     *
+     * @param currentValue current value to depict
+     */
     public void setCurrentValue(float currentValue)
     {
         model.setCurrentValue(currentValue);
@@ -125,7 +149,7 @@ public class BarValue extends Component implements PropertyChangeListener
 
     /**
      *
-     * @param color
+     * @param color fill color
      */
     public void setBarColor(Color color)
     {
@@ -134,7 +158,7 @@ public class BarValue extends Component implements PropertyChangeListener
 
     /**
      *
-     * @param minValue
+     * @param minValue minimum value possible
      */
     public void setMinValue(float minValue)
     {
@@ -143,7 +167,7 @@ public class BarValue extends Component implements PropertyChangeListener
 
     /**
      *
-     * @param maxValue
+     * @param maxValue max value possible
      */
     public void setMaxValue(float maxValue)
     {
@@ -152,7 +176,7 @@ public class BarValue extends Component implements PropertyChangeListener
 
     /**
      *
-     * @param units
+     * @param units Units text if any
      */
     public void setUnitsText(String units)
     {
@@ -161,13 +185,18 @@ public class BarValue extends Component implements PropertyChangeListener
 
     /**
      *
-     * @param text
+     * @param text label for UI element
      */
     public void setValueDescriptionText(String text)
     {
         barDescription = text;
     }
 
+    /**
+     * Test main
+     *
+     * @param args CLI arguments
+     */
     public static void main(String[] args)
     {
         BarValue bar = new BarValue("Temperature");

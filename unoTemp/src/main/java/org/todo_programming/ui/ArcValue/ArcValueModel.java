@@ -7,37 +7,37 @@ import java.beans.PropertyChangeListener;
 public class ArcValueModel
 {
 
-    /** */
+    /** property change support(observer pattern) */
     private final SwingPropertyChangeSupport changeSupport;
 
-    /** */
+    /** Event string for  text color change */
     public static final String TEXT_COLOR_CHANGE_EVENT = "textColor";
 
-    /** */
+    /** Event string for fill color change */
     public static final String FILL_COLOR_CHANGE_EVENT = "fillColor";
 
-    /** */
+    /** Event string for value change  */
     public static final String CURRENT_VALUE_CHANGE_EVENT = "currentValue";
 
-    /** */
+    /** Event string for min value change */
     public static final String MIN_VALUE_CHANGE_EVENT = "minValue";
 
-    /** */
+    /** Event string for max value change */
     public static final String MAX_VALUE_CHANGE_EVENT = "maxValue";
 
-    /** */
+    /** minimum value possible */
     private float minValue = 0;
 
-    /** */
+    /** maximum value possible */
     private float maxValue = 0;
 
-    /** */
+    /** Current value displayed by UI */
     private float currentValue = 0;
 
-    /** */
-    private Color fillColor;
+    /** current arc color */
+    private Color fillColor = Color.GREEN;
 
-    /** */
+    /** current text color */
     private Color textColor;
 
     /**
@@ -50,16 +50,17 @@ public class ArcValueModel
 
     /**
      *
-     * @return
+     * @return fill percent of arc, which is useful for drawing
      */
-    public int getEndAngle()
+    public float getFillPercent()
     {
-        return (int)(currentValue - minValue / (maxValue) * 100f);
+        return (currentValue - minValue / (maxValue));
     }
 
     /**
+     * get minimum value
      *
-     * @return
+     * @return min value possible
      */
     public float getMinValue()
     {
@@ -67,17 +68,19 @@ public class ArcValueModel
     }
 
     /**
+     * set minimum
      *
-     * @param minValue
+     * @param minValue min value possible
      */
     public void setMinValue(float minValue)
     {
-        this.minValue = minValue;
+
+        changeSupport.firePropertyChange(MIN_VALUE_CHANGE_EVENT, this.minValue, this.minValue = minValue);
     }
 
     /**
      *
-     * @return
+     * @return maximum value
      */
     public float getMaxValue()
     {
@@ -86,16 +89,16 @@ public class ArcValueModel
 
     /**
      *
-     * @param maxValue
+     * @param maxValue maximum value
      */
     public void setMaxValue(float maxValue)
     {
-        this.maxValue = maxValue;
+        changeSupport.firePropertyChange(MAX_VALUE_CHANGE_EVENT, this.maxValue, this.maxValue = maxValue);
     }
 
     /**
      *
-     * @return
+     * @return current value
      */
     public float getCurrentValue()
     {
@@ -104,16 +107,16 @@ public class ArcValueModel
 
     /**
      *
-     * @param currentValue
+     * @param currentValue value to display
      */
     public void setCurrentValue(float currentValue)
     {
-        this.currentValue = currentValue;
+        changeSupport.firePropertyChange(CURRENT_VALUE_CHANGE_EVENT, this.currentValue, this.currentValue = currentValue);
     }
 
     /**
      *
-     * @return
+     * @return arc color
      */
     public Color getFillColor()
     {
@@ -122,16 +125,16 @@ public class ArcValueModel
 
     /**
      *
-     * @param fillColor
+     * @param fillColor arc color
      */
     public void setFillColor(Color fillColor)
     {
-        this.fillColor = fillColor;
+        changeSupport.firePropertyChange(FILL_COLOR_CHANGE_EVENT, this.fillColor, this.fillColor = fillColor);
     }
 
     /**
      *
-     * @return
+     * @return text color
      */
     public Color getTextColor()
     {
@@ -140,11 +143,11 @@ public class ArcValueModel
 
     /**
      *
-     * @param textColor
+     * @param textColor color of text in UI
      */
     public void setTextColor(Color textColor)
     {
-        this.textColor = textColor;
+        changeSupport.firePropertyChange(TEXT_COLOR_CHANGE_EVENT, this.textColor, this.textColor = textColor);
     }
 
     /**

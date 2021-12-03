@@ -13,11 +13,17 @@ import java.util.TimerTask;
 
 public class ArcValue extends Component implements PropertyChangeListener
 {
-    /** */
+    /** Model of UI element */
     private final ArcValueModel model;
 
+    /** Descriptive text for what is being displayed */
+    private String valueDescription = "";
+
+    /** Units associated with displayed value */
+    private String valueUnits = "";
+
     /**
-     *
+     * Constructor
      */
     public ArcValue()
     {
@@ -25,33 +31,77 @@ public class ArcValue extends Component implements PropertyChangeListener
         model.addPropertyChangeListener(this);
     }
 
+    /**
+     * Constructor
+     *
+     * @param valueDescription text for UI element label
+     */
+    public ArcValue(String valueDescription)
+    {
+        model = new ArcValueModel();
+        model.addPropertyChangeListener(this);
+        this.valueDescription = valueDescription;
+    }
+
+    /**
+     * Constructor
+     *
+     * @param valueDescription Text for UI element label
+     * @param valueUnits Units of value
+     */
+    public ArcValue(String valueDescription, String valueUnits)
+    {
+        model = new ArcValueModel();
+        model.addPropertyChangeListener(this);
+        this.valueUnits = valueUnits;
+        this.valueDescription = valueDescription;
+    }
+
     @Override
     public void paint(Graphics g)
     {
         super.paint(g);
         Graphics2D g2d = (Graphics2D)(g);
-        g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON);
 
         int drawHeight;
         int drawWidth;
         int stroke;
         if(getHeight() > getWidth())
         {
-            stroke = (int)(getWidth() * 0.10);
-            drawHeight = drawWidth = (int)(getWidth() * 0.90);
+            stroke = (int)(getWidth() * 0.075);
+            drawHeight = drawWidth = (int)(getWidth() * 0.80);
         }
 
         else
         {
-            stroke = (int)(getHeight() * 0.10);
-            drawHeight = drawWidth = (int)(getHeight() * 0.90);
+            stroke = (int)(getHeight() * 0.075);
+            drawHeight = drawWidth = (int)(getHeight() * 0.80);
         }
 
         int centerX = getWidth()/2 - drawWidth/2;
-        int centerY = getHeight()/2 - drawHeight /2;
-
+        int centerY = getHeight()/2 - drawHeight /2 + (int)(getHeight() * 0.05);
         g2d.setStroke(new BasicStroke(stroke));
-        g2d.drawArc(centerX, centerY, drawWidth, drawHeight, 0 , 360);
+        g2d.setColor(model.getFillColor());
+        g2d.drawArc(centerX, centerY, drawWidth, drawHeight, 0, (int) (model.getFillPercent() * -36f));
+
+        /* Draw Value, and units in center of arc */
+        g2d.setColor(model.getTextColor());
+        String text = model.getCurrentValue() * 10 + " " + valueUnits;
+        int fontSize = (int)(0.20 * drawHeight);
+        g2d.setFont(new Font("TimesRoman", Font.PLAIN, fontSize));
+        FontMetrics metrics = g2d.getFontMetrics();
+        int x = centerX + (drawWidth - metrics.stringWidth(text))/2;
+        int y = centerY + ((drawHeight - metrics.getHeight())/2) + metrics.getAscent();
+        g2d.drawString(text,x,y);
+
+        /* Draw value description text above value */
+        g2d.setColor(model.getTextColor());
+        g2d.setFont(new Font("TimesRoman", Font.PLAIN, fontSize));
+        x = centerX + (drawWidth - metrics.stringWidth(valueDescription))/2;
+        y = 1 + (((int)(getHeight() * 0.10f) - metrics.getHeight())/2) + metrics.getAscent();
+        g2d.drawString(valueDescription,x,y);
     }
 
     @Override
@@ -70,7 +120,7 @@ public class ArcValue extends Component implements PropertyChangeListener
 
     /**
      *
-     * @param currentValue
+     * @param currentValue currently displayed value
      */
     public void setCurrentValue(float currentValue)
     {
@@ -79,7 +129,7 @@ public class ArcValue extends Component implements PropertyChangeListener
 
     /**
      *
-     * @param minValue
+     * @param minValue minimum value possible for currentValue
      */
     public void setMinValue(float minValue)
     {
@@ -88,7 +138,7 @@ public class ArcValue extends Component implements PropertyChangeListener
 
     /**
      *
-     * @param maxValue
+     * @param maxValue maximum value possible for current value
      */
     public void setMaxValue(float maxValue)
     {
@@ -97,7 +147,7 @@ public class ArcValue extends Component implements PropertyChangeListener
 
     /**
      *
-     * @param color
+     * @param color Fill color for arc
      */
     public void setFillColor(Color color)
     {
@@ -106,7 +156,7 @@ public class ArcValue extends Component implements PropertyChangeListener
 
     /**
      *
-     * @param color
+     * @param color Text color
      */
     public void setTextColor(Color color)
     {
@@ -114,12 +164,15 @@ public class ArcValue extends Component implements PropertyChangeListener
     }
 
     /**
+     * test main
      *
-     * @param args
+     * @param args CLI arguments
      */
     public static void main(String[] args)
     {
-        ArcValue indicator = new ArcValue();
+        ArcValue indicator = new ArcValue("test", "%");
+        indicator.setMinValue(0);
+        indicator.setMaxValue(10);
         JFrame frame = new JFrame();
         frame.getContentPane().setBackground(Color.LIGHT_GRAY);
         frame.setPreferredSize(new Dimension(500,500));
@@ -134,10 +187,10 @@ public class ArcValue extends Component implements PropertyChangeListener
             @Override
             public void run() {
                 int min = 0;
-                int max = 3;
+                int max =11;
                 int status = (int)(Math.random() * (max - min) + min);
                 System.out.println("Status: " + status);
-                //indicator.setStatus(IndicatorStatus.getEnumFromValue(status));
+                indicator.setCurrentValue(status);
             }
         };
         uiTimer.scheduleAtFixedRate(task, 2000, 2000);
