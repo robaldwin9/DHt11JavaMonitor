@@ -32,7 +32,7 @@ public class SerialTemperatureComms extends TimerTask
 
 	private Thread serialThread;
 
-	private final long CONNECTION_TIMEOUT = 12000;
+	private boolean dataRecieved = false;
 
 	/* log4j instance */
 	static final Logger log = LogManager.getLogger(SerialTemperatureComms.class.getName());
@@ -50,9 +50,9 @@ public class SerialTemperatureComms extends TimerTask
 
 		serialThread = getSerialThread();
 		serialThread.start();
-
+		
 		Timer connectionTimer = new Timer("connectionMonitor");
-		connectionTimer.scheduleAtFixedRate(this, 0, CONNECTION_TIMEOUT);
+		connectionTimer.scheduleAtFixedRate(this, 0, 1000);
 	}
 
 	private Thread getSerialThread()
@@ -69,6 +69,7 @@ public class SerialTemperatureComms extends TimerTask
 
 				public void serialEvent(SerialPortEvent event)
 				{
+					dataRecieved = true;
 					/* Data not available return */
 					if (event.getEventType() != SerialPort.LISTENING_EVENT_DATA_AVAILABLE)
 					{
@@ -78,7 +79,6 @@ public class SerialTemperatureComms extends TimerTask
 					/* Read serial bytes from communication port */
 					byte[] newData = new byte[16];
 					commPort.readBytes(newData, newData.length);
-
 
 					for (byte newDatum : newData)
 					{
@@ -188,19 +188,20 @@ public class SerialTemperatureComms extends TimerTask
 	public void run()
 	{
 		/* Will try reconnection if serial data not coming for several seconds */
-		if((System.currentTimeMillis() - lastTimeDataReceived) > CONNECTION_TIMEOUT && bean.isControllerConnected())
+		if(commPort!=null && !commPort.isOpen() && dataRecieved)
 		{
+			dataRecieved = false;
+			bean.setControllerConnected(false);
+
 			if(commPort != null)
 			{
-				bean.setControllerConnected(false);
 				log.error("connection lost");
 				commPort.closePort();
 				serialThread = null;
 				serialThread = getSerialThread();
 				serialThread.start();
-				findCorrectSerialPort(Config.getInstance().getSerialPort());
-				openSerialPort();
 			}
+
 		}
 
 	}
