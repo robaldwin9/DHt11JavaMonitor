@@ -48,6 +48,32 @@ public class BarValue extends Component implements PropertyChangeListener
         model = new BarValueModel();
         model.addPropertyChangeListener(this);
         this.barDescription = valueLabel;
+        this.unitsText = unitsText;
+    }
+
+    /**
+     *
+     * @param valueLabel value description
+     * @param unitsText Units to display if any
+     */
+    public BarValue(String valueLabel, String unitsText, float min, float  max)
+    {
+        model = new BarValueModel(min, max);
+        model.addPropertyChangeListener(this);
+        this.barDescription = valueLabel;
+        this.unitsText = unitsText;
+    }
+
+    /**
+     *
+     * @param valueLabel value description
+     * @param
+     */
+    public BarValue(String valueLabel, float min, float  max)
+    {
+        model = new BarValueModel(min, max);
+        model.addPropertyChangeListener(this);
+        this.barDescription = valueLabel;
     }
 
     @Override
@@ -73,6 +99,7 @@ public class BarValue extends Component implements PropertyChangeListener
         g2d.fillRect((int)(getWidth() * 0.05f),drawHeight/4, newWidth, drawHeight/2);
 
         /* Draw current value */
+        g2d.setColor(model.getTextColor());
         String text = model.getCurrentValue() + " " + unitsText;
         int fontSize = (int)(0.20 * drawHeight);
         g2d.setFont(new Font("TimesRoman", Font.PLAIN, fontSize));
@@ -85,7 +112,6 @@ public class BarValue extends Component implements PropertyChangeListener
         /* Draw bar title */
         x = ((int)(((getWidth() * 0.05f) + drawWidth)) - metrics.stringWidth(barDescription))/2;
         y = drawHeight/6 ;
-        g2d.setColor(model.getTextColor());
         g2d.drawString(barDescription, x, y);
 
         /* Draw min value text */
@@ -153,7 +179,7 @@ public class BarValue extends Component implements PropertyChangeListener
      */
     public void setBarColor(Color color)
     {
-        model.setTextColor(color);
+        model.setBarColor(color);
     }
 
     /**
@@ -199,7 +225,7 @@ public class BarValue extends Component implements PropertyChangeListener
      */
     public static void main(String[] args)
     {
-        BarValue bar = new BarValue("Temperature");
+        BarValue bar = new BarValue("Temperature",0, 500);
         JFrame frame = new JFrame();
         frame.getContentPane().setBackground(Color.LIGHT_GRAY);
         frame.setPreferredSize(new Dimension(500,500));
@@ -210,16 +236,16 @@ public class BarValue extends Component implements PropertyChangeListener
         frame.setVisible(true);
 
         java.util.Timer uiTimer = new Timer("UITimer");
+
         TimerTask task = new TimerTask()
         {
             @Override
             public void run() {
-                int min = 0;
-                int max = 100;
+               int min = 0;
+                int max = 500;
                 int status = (int)(Math.random() * (max - min) + min);
-                bar.setCurrentValue(status);
-            }
-        };
-        uiTimer.scheduleAtFixedRate(task, 2000, 2000);
+               bar.setCurrentValue(status);
+           }
+       }; uiTimer.scheduleAtFixedRate(task, 2000, 2000);
     }
 }

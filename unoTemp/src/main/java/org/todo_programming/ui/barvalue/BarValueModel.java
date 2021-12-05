@@ -37,13 +37,23 @@ public class BarValueModel
     private Color barColor = Color.GREEN;
 
     /** Color for text on the UI element */
-    private Color textColor = Color.BLACK;
+    private Color textColor = Color.WHITE;
 
     /**
      * Constructor
      */
     public BarValueModel()
     {
+        changeSupport = new SwingPropertyChangeSupport(this);
+    }
+
+    /**
+     * Constructor
+     */
+    public BarValueModel(float min, float max)
+    {
+        this.min = min;
+        this.max = max;
         changeSupport = new SwingPropertyChangeSupport(this);
     }
 
@@ -103,7 +113,7 @@ public class BarValueModel
 
     public float getFillPercent()
     {
-        return (currentValue - min / (max) * 100f);
+        return ((currentValue - min) / (max) * 100f);
     }
 
     /**

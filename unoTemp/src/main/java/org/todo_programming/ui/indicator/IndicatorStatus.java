@@ -4,7 +4,8 @@ public enum IndicatorStatus
 {
     DISABLED(0),
     WARN(1),
-    HEALTHY(2);
+    HEALTHY(2),
+    ERROR(3);
 
     private final int value;
 
@@ -31,6 +32,12 @@ public enum IndicatorStatus
                 break;
             case 2:
                 status = HEALTHY;
+                break;
+            case 3:
+                status = ERROR;
+                break;
+            default:
+                status = DISABLED;
                 break;
         }
 

@@ -14,11 +14,23 @@ public class Indicator extends Component implements PropertyChangeListener
     /** Model for UI element */
     private final IndicatorModel model;
 
+    private String descriptiveText = "";
+
     /**
      * Constructor
      */
     public Indicator()
     {
+        model = new IndicatorModel();
+        model.addPropertyChangeListener(this);
+    }
+
+    /**
+     * Constructor
+     */
+    public Indicator(String descriptiveText)
+    {
+        this.descriptiveText = descriptiveText;
         model = new IndicatorModel();
         model.addPropertyChangeListener(this);
     }
@@ -30,26 +42,42 @@ public class Indicator extends Component implements PropertyChangeListener
         Graphics2D g2d = (Graphics2D)(g);
         g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
-        int centerX = getWidth()/2;
         int centerY = getHeight()/2;
         int drawHeight;
         int drawWidth;
         int stroke;
+        int fontSize;
         if(getHeight() > getWidth())
         {
-            stroke = (int)(getWidth() * 0.15);
-            drawHeight = drawWidth = (int)(getWidth() * 0.75);
+            fontSize = (int)(getWidth() * 0.20);
+            stroke = (int)(getWidth() * 0.08);
+            drawHeight = drawWidth = (int)(getWidth() * 0.40);
         }
 
         else
         {
-            stroke = (int)(getHeight() * 0.15);
-            drawHeight = drawWidth = (int)(getHeight() * 0.75);
+            fontSize = (int)(getHeight()* 0.20);
+            stroke = (int)(getHeight() * 0.08);
+            drawHeight = drawWidth = (int)(getHeight() * 0.40);
         }
+
+        /* Draw Indicator description text */
+        g2d.setColor(Color.WHITE);
+        g2d.setFont(new Font("TimesRoman", Font.PLAIN, fontSize));
+        FontMetrics metrics = g2d.getFontMetrics();
+        int x = 0;
+        int y = centerY - drawHeight/2 +((drawHeight - metrics.getHeight())/2) + metrics.getAscent();
+        g2d.drawString(descriptiveText,x,y);
+
+        /* Draw indicator */
 
         /* Outer border */
         GradientPaint gp = new GradientPaint(0, 0, Color.BLACK, drawWidth, drawHeight, Color.gray, true);
         g2d.setPaint(gp);
+
+        int startX = x + metrics.stringWidth(descriptiveText) + stroke;
+        g2d.setStroke(new BasicStroke(stroke));
+        g2d.drawRect(startX,centerY - drawHeight/2, drawWidth, drawHeight);
 
         switch (model.getIndicatorStatus())
         {
@@ -62,16 +90,16 @@ public class Indicator extends Component implements PropertyChangeListener
             case HEALTHY:
                 gp = new GradientPaint(0, 0, Color.BLACK, drawWidth, drawHeight, Color.GREEN, true);
                 break;
+            case ERROR:
+                gp = new GradientPaint(0,0,Color.BLACK, drawWidth, drawHeight, Color.RED, true);
+                break;
             default:
                 gp = new GradientPaint(0, 0, Color.GRAY, drawWidth, drawHeight, Color.BLACK, true);
                 break;
         }
 
-        g2d.setStroke(new BasicStroke(stroke));
-        g2d.drawRect(centerX - drawWidth/2,centerY - drawHeight/2, drawWidth, drawHeight);
         g2d.setPaint(gp);
-        g2d.fillRect(centerX - drawWidth/2,centerY - drawHeight/2, drawWidth, drawHeight);
-
+        g2d.fillRect(startX,centerY - drawHeight/2, drawWidth, drawHeight);
     }
 
     /**
@@ -116,7 +144,6 @@ public class Indicator extends Component implements PropertyChangeListener
                 int min = 0;
                 int max = 3;
                 int status = (int)(Math.random() * (max - min) + min);
-                System.out.println("Status: " + status);
                 indicator.setStatus(IndicatorStatus.getEnumFromValue(status));
             }
         };

@@ -26,7 +26,7 @@ public class ArcValueModel
     public static final String MAX_VALUE_CHANGE_EVENT = "maxValue";
 
     /** minimum value possible */
-    private float minValue = 0;
+    private float minValue = 100;
 
     /** maximum value possible */
     private float maxValue = 0;
@@ -38,7 +38,7 @@ public class ArcValueModel
     private Color fillColor = Color.GREEN;
 
     /** current text color */
-    private Color textColor;
+    private Color textColor = Color.WHITE;
 
     /**
      * Constructor
@@ -48,13 +48,21 @@ public class ArcValueModel
         changeSupport = new SwingPropertyChangeSupport(this);
     }
 
+    public ArcValueModel(int min, int max)
+    {
+        this.minValue = min;
+        this.maxValue = max;
+        changeSupport = new SwingPropertyChangeSupport(this);
+    }
+
+
     /**
      *
      * @return fill percent of arc, which is useful for drawing
      */
     public float getFillPercent()
     {
-        return (currentValue - minValue / (maxValue));
+        return ((currentValue - minValue) / (maxValue) * 100f);
     }
 
     /**

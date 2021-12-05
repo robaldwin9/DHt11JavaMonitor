@@ -31,6 +31,24 @@ public class ArcValue extends Component implements PropertyChangeListener
         model.addPropertyChangeListener(this);
     }
 
+
+    public ArcValue(String valueDescription, String valueUnits, int min, int max)
+    {
+        model = new ArcValueModel(min, max);
+        model.addPropertyChangeListener(this);
+        this.valueDescription = valueDescription;
+        this.valueUnits = valueUnits;
+    }
+
+    public ArcValue(String valueDescription, int min, int max)
+    {
+        model = new ArcValueModel(min,max);
+        model.addPropertyChangeListener(this);
+        this.valueDescription = valueDescription;
+        this.valueUnits = valueUnits;
+    }
+
+
     /**
      * Constructor
      *
@@ -84,11 +102,11 @@ public class ArcValue extends Component implements PropertyChangeListener
         int centerY = getHeight()/2 - drawHeight /2 + (int)(getHeight() * 0.05);
         g2d.setStroke(new BasicStroke(stroke));
         g2d.setColor(model.getFillColor());
-        g2d.drawArc(centerX, centerY, drawWidth, drawHeight, 0, (int) (model.getFillPercent() * -36f));
+        g2d.drawArc(centerX, centerY, drawWidth, drawHeight, 0, (int) (model.getFillPercent()/10 * -36f));
 
         /* Draw Value, and units in center of arc */
         g2d.setColor(model.getTextColor());
-        String text = model.getCurrentValue() * 10 + " " + valueUnits;
+        String text = model.getCurrentValue() + " " + valueUnits;
         int fontSize = (int)(0.20 * drawHeight);
         g2d.setFont(new Font("TimesRoman", Font.PLAIN, fontSize));
         FontMetrics metrics = g2d.getFontMetrics();
@@ -189,7 +207,6 @@ public class ArcValue extends Component implements PropertyChangeListener
                 int min = 0;
                 int max =11;
                 int status = (int)(Math.random() * (max - min) + min);
-                System.out.println("Status: " + status);
                 indicator.setCurrentValue(status);
             }
         };
