@@ -102,7 +102,7 @@ public class BarValue extends Component implements PropertyChangeListener
         g2d.setColor(model.getTextColor());
         String text = model.getCurrentValue() + " " + unitsText;
         int fontSize = (int)(0.20 * drawHeight);
-        g2d.setFont(new Font("TimesRoman", Font.PLAIN, fontSize));
+        g2d.setFont(new Font("Montserrat", Font.PLAIN, fontSize));
         FontMetrics metrics = g2d.getFontMetrics();
         int x = ((int)(((getWidth() * 0.05f) + drawWidth)) - metrics.stringWidth(text))/2;
         int y = drawHeight/4 + (drawHeight/4) + metrics.getAscent() - fontSize/2 ;
@@ -116,7 +116,7 @@ public class BarValue extends Component implements PropertyChangeListener
 
         /* Draw min value text */
         fontSize = (int)(0.10 * drawHeight);
-        g2d.setFont(new Font("TimesRoman", Font.PLAIN, fontSize));
+        g2d.setFont(new Font("Montserrat", Font.PLAIN, fontSize));
         metrics = g2d.getFontMetrics();
         text = String.valueOf(model.getMin());
         x = (int)(getWidth() * 0.06f) + metrics.stringWidth(text)/2;

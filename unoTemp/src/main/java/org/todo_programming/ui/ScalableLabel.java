@@ -16,7 +16,7 @@ import javax.swing.JLabel;
 public class ScalableLabel extends JLabel implements ComponentListener
 {
 	float scaleFactor;														        //Scale label by float percentage 0.50f -> 50 Percent
-	private static final String DEFAULT_FONT_NAME = "TimesRoman";					//Default font name
+	private static final String DEFAULT_FONT_NAME = "Montserrat";					//Default font name
 	private static final int DEFAULT_FONT_STYLE = Font.BOLD;						//Default font style
 	private static final int DEFAULT_FONT_SIZE = 16;                                //Default font size
 	private static final long serialVersionUID = -6063895322407126611L;		        //Class identifier

@@ -107,8 +107,8 @@ public class ArcValue extends Component implements PropertyChangeListener
         /* Draw Value, and units in center of arc */
         g2d.setColor(model.getTextColor());
         String text = model.getCurrentValue() + " " + valueUnits;
-        int fontSize = (int)(0.20 * drawHeight);
-        g2d.setFont(new Font("TimesRoman", Font.PLAIN, fontSize));
+        int fontSize = (int)(0.18 * drawHeight);
+        g2d.setFont(new Font("Montserrat", Font.PLAIN, fontSize));
         FontMetrics metrics = g2d.getFontMetrics();
         int x = centerX + (drawWidth - metrics.stringWidth(text))/2;
         int y = centerY + ((drawHeight - metrics.getHeight())/2) + metrics.getAscent();
@@ -116,7 +116,7 @@ public class ArcValue extends Component implements PropertyChangeListener
 
         /* Draw value description text above value */
         g2d.setColor(model.getTextColor());
-        g2d.setFont(new Font("TimesRoman", Font.PLAIN, fontSize));
+        g2d.setFont(new Font("Montserrat", Font.PLAIN, fontSize));
         x = centerX + (drawWidth - metrics.stringWidth(valueDescription))/2;
         y = 1 + (((int)(getHeight() * 0.10f) - metrics.getHeight())/2) + metrics.getAscent();
         g2d.drawString(valueDescription,x,y);

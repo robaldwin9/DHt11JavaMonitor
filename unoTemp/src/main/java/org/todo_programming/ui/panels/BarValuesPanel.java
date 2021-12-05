@@ -67,8 +67,8 @@ public class BarValuesPanel extends SensorView
 
         constraints.fill = GridBagConstraints.BOTH;
         constraints.gridy +=1;
-        constraints.weightx = 0.50;
-        constraints.weighty = 0.50;
+        constraints.weightx = 0.30;
+        constraints.weighty = 0.30;
         constraints.insets = new Insets(1,10,1,1);
         add(controllerIndicator,constraints);
         setBackground(Color.BLACK);

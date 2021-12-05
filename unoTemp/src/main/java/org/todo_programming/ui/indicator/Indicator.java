@@ -47,35 +47,35 @@ public class Indicator extends Component implements PropertyChangeListener
         int drawWidth;
         int stroke;
         int fontSize;
+        int padding = (int)(getHeight() * 0.02);
         if(getHeight() > getWidth())
         {
-            fontSize = (int)(getWidth() * 0.20);
+            fontSize = (int)(getWidth() * 0.35);
             stroke = (int)(getWidth() * 0.08);
             drawHeight = drawWidth = (int)(getWidth() * 0.40);
         }
 
         else
         {
-            fontSize = (int)(getHeight()* 0.20);
+            fontSize = (int)(getHeight()* 0.35);
             stroke = (int)(getHeight() * 0.08);
             drawHeight = drawWidth = (int)(getHeight() * 0.40);
         }
 
         /* Draw Indicator description text */
         g2d.setColor(Color.WHITE);
-        g2d.setFont(new Font("TimesRoman", Font.PLAIN, fontSize));
+        g2d.setFont(new Font("Montserrat", Font.PLAIN, fontSize));
         FontMetrics metrics = g2d.getFontMetrics();
         int x = 0;
         int y = centerY - drawHeight/2 +((drawHeight - metrics.getHeight())/2) + metrics.getAscent();
         g2d.drawString(descriptiveText,x,y);
 
-        /* Draw indicator */
-
         /* Outer border */
         GradientPaint gp = new GradientPaint(0, 0, Color.BLACK, drawWidth, drawHeight, Color.gray, true);
         g2d.setPaint(gp);
 
-        int startX = x + metrics.stringWidth(descriptiveText) + stroke;
+        /* Draw indicator */
+        int startX = x + metrics.stringWidth(descriptiveText) + stroke + padding;
         g2d.setStroke(new BasicStroke(stroke));
         g2d.drawRect(startX,centerY - drawHeight/2, drawWidth, drawHeight);
 
@@ -127,7 +127,7 @@ public class Indicator extends Component implements PropertyChangeListener
      */
     public static void main(String[] args)
     {
-        Indicator indicator = new Indicator();
+        Indicator indicator = new Indicator("Connected");
         JFrame frame = new JFrame();
         frame.getContentPane().setBackground(Color.LIGHT_GRAY);
         frame.setPreferredSize(new Dimension(500,500));
