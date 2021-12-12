@@ -86,11 +86,7 @@ Application reads serial data from Arduino using jSerialComm Java library. This 
 
 [Websocket server](webSocketServer.md)
 
-[UI Configurations]: UIConfiguration.md	"local UI configurations"
-
-
-
-
+[UI Configuration Options](UIConfiguration.md)
 
 ##  :desktop_computer: Build/Load Arduino Sketch
 
