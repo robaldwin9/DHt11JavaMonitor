@@ -67,10 +67,28 @@ Application reads serial data from Arduino using jSerialComm Java library. This 
      :heavy_check_mark: Added Web socket server
 
      :heavy_check_mark: Add example client webpage
+    
+7.  **Version 1.6**
+
+     :heavy_check_mark: Added Configurable UI, Text data view, Data as bars, data as arcs(like web client)
+
+     :heavy_check_mark: Much improved local UI graphics options
+
+     :warning: **BE SURE TO UPDATE CONFIG TO INCLUDE NEW CONFIGURATION OPTIONS**
+
+     :bug: Fixed some reconnect issues
+
+     :bug: Made Control connected status more accurate
+
+     
 
 ## Feature Documents
 
 [Websocket server](webSocketServer.md)
+
+[UI Configurations]: UIConfiguration.md	"local UI configurations"
+
+
 
 
 

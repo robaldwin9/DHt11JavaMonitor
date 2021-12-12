@@ -2,6 +2,7 @@ package org.todo_programming.ArduinoMonitor;
 
 import org.glassfish.tyrus.server.Server;
 import org.todo_programming.Serial.SerialTemperatureComms;
+import org.todo_programming.ui.MainFrame;
 
 import java.util.Timer;
 import java.util.TimerTask;

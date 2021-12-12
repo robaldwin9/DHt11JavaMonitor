@@ -85,17 +85,7 @@ public class SensorBean implements Serializable
 	 */
 	public int getTempInteger()
 	{
-
-		if(Config.getInstance().getUnits() == 1)
-		{
-			return ((Integer.parseInt((temperature ) )* 9/5) + 32);
-		}
-
-		else
-			{
-			return Integer.parseInt(temperature);
-		}
-
+		return Integer.parseInt(temperature);
 	}
 	
 	/**
@@ -121,7 +111,11 @@ public class SensorBean implements Serializable
 	{
 		return humidity + "%";
 	}
-	
+
+	public int getHumidityInteger()
+	{
+		return Integer.parseInt(humidity);
+	}
 	/**
 	 * 
 	 * @param humidity - String value
