@@ -78,27 +78,28 @@ public class Indicator extends Component implements PropertyChangeListener
         int startX = x + metrics.stringWidth(descriptiveText) + stroke + padding;
         g2d.setStroke(new BasicStroke(stroke));
         g2d.drawRect(startX,centerY - drawHeight/2, drawWidth, drawHeight);
+       g2d.setColor(Color.GRAY);
 
         switch (model.getIndicatorStatus())
         {
             case DISABLED:
-                gp = new GradientPaint(0, 0, Color.GRAY, drawWidth, drawHeight, Color.BLACK, true);
+                g2d.setColor(Color.GRAY);
                 break;
             case WARN:
-                gp = new GradientPaint(0, 0, Color.BLACK, drawWidth, drawHeight, Color.YELLOW, true);
+                g2d.setColor(Color.YELLOW);
                 break;
             case HEALTHY:
-                gp = new GradientPaint(0, 0, Color.BLACK, drawWidth, drawHeight, Color.GREEN, true);
+                g2d.setColor(Color.GREEN);
                 break;
             case ERROR:
-                gp = new GradientPaint(0,0,Color.BLACK, drawWidth, drawHeight, Color.RED, true);
+                g2d.setColor(Color.GREEN);
                 break;
             default:
-                gp = new GradientPaint(0, 0, Color.GRAY, drawWidth, drawHeight, Color.BLACK, true);
+                g2d.setColor(Color.GRAY);
                 break;
         }
 
-        g2d.setPaint(gp);
+       
         g2d.fillRect(startX,centerY - drawHeight/2, drawWidth, drawHeight);
     }
 
